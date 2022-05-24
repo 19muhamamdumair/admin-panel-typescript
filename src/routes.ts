@@ -1,7 +1,7 @@
 // pages
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Products from "./pages/Products";
+import Users from "./pages/Users";
+import Roles from "./pages/Roles";
+import Permissions from "./pages/Permissions";
 
 // types
 import IRoute from "./types/route.type";
@@ -11,23 +11,23 @@ import IRoute from "./types/route.type";
 export const routes: Array<IRoute> = [
     {
         key: 'home-route',
-        title: 'Home',
+        title: 'Users',
         path: '/',
         enabled: true,
-        component: Home
+        component: Users
     },
     {
-        key: 'about-route',
-        title: 'About',
+        key: 'Roles-route',
+        title: 'Roles',
         path: '/Role',
         enabled: true,
-        component: About
+        component: Roles
     },
     {
         key: 'products-route',
-        title: 'Products',
+        title: 'Permissions',
         path: '/permissions',
         enabled: true,
-        component: Products
+        component: Permissions
     }
 ]
