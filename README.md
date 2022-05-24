@@ -1,12 +1,4 @@
 
-## Read the Blog Post Here ✨
-https://sahanamarsha.medium.com/lets-setup-a-react-typescript-project-with-material-ui-react-router-3d7ea8cb5596
-
-
-## Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 ### Available Scripts
 
 In the project directory, you can run:
