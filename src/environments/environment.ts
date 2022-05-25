@@ -3,6 +3,8 @@ export const environment = {
     user_mock_data : {
         id: 123123,
         username: "steve",
+        firstname: "smith",
+        lastname: "Alians",
         email: "willdove@gmail.com",
         password: "12345",
         roles : ["Admin"]

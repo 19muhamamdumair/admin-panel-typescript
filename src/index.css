@@ -21,3 +21,18 @@
 .css-4t3x6l-MuiPaper-root-MuiDrawer-paper{
     background-color: black;
 }
+.dropdown-toggle::after{
+    display:none;
+}
+.dropdown-toggle::marker{
+    display:none !important;
+}
+.nav-link{
+    cursor: pointer;
+}
+/* .active-bg:active{
+    background-color:white
+} */
+.per-con{
+    position: relative;
+}
