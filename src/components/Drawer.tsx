@@ -44,19 +44,14 @@ export default function ResponsiveDrawer(props: Props) {
       <Toolbar />
       <Divider />
       <List>
-          <p className=' px-3 admin-col'>ADMINISTRATOR</p>
- 
-                <NavLink className="px-5 link-set"  to="/">User</NavLink>
-                <div className="mt-3">
-                <NavLink className="px-5 mt-5 link-set"  to="/permissions">Permissions</NavLink>
-                </div>
-                <div className="mt-3">
-                <NavLink className="px-5 mt-4 link-set"  to="/Role">Role</NavLink>
-                </div>
-
-
-
-
+        <p className=' px-3 admin-col'>ADMINISTRATOR</p>
+        <NavLink className="px-5 link-set"  to="/">User</NavLink>
+        <div className="mt-3">
+        <NavLink className="px-5 mt-5 link-set"  to="/permissions">Permissions</NavLink>
+        </div>
+        <div className="mt-3">
+        <NavLink className="px-5 mt-4 link-set"  to="/Role">Role</NavLink>
+        </div>
       </List>
       <Divider />
       <List>
@@ -116,7 +111,7 @@ export default function ResponsiveDrawer(props: Props) {
       >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
-          container={container}
+        
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
