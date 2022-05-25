@@ -21,3 +21,47 @@
 .css-4t3x6l-MuiPaper-root-MuiDrawer-paper{
     background-color: black;
 }
+.drawer-index{
+  position: absolute;
+}
+.box-index{
+    position: relative;
+}
+.modal-button{
+    border: 1px solid black;
+}
+
+.drop-set{
+    border: 1px solid rgb(153, 145, 145);
+    font-size: 13px;
+    border-radius: 0px
+}
+.w-modal{
+    width: 30%;
+}
+.modal-button{
+    border: 1px solid rgb(153, 145, 145);
+    margin: 0px;
+    border-radius:0px;
+    font-size: 13px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-radius:0px;
+}
+.fs-13{
+    font-size:13px;
+    font-weight: 600;
+}
+.marg-set{
+    margin-top: 0px !important;
+    padding: 0px !important;
+}
+.marg-top{
+    margin-top: 0px !important;
+}
+/* @media screen and (max-width: 980px) {
+    .w-modal {
+      width: 25% !important;
+    }
+  } */
+ 
