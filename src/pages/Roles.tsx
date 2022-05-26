@@ -8,7 +8,7 @@ const Roles: FC<any> = (): ReactElement => {
     <Box
       sx={{
         flexGrow: 1,
-        backgroundColor: "whitesmoke",
+        // backgroundColor: "whitesmoke",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

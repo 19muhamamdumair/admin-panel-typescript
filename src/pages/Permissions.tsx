@@ -9,19 +9,8 @@ const Permissions: FC<any> = (): ReactElement => {
     alert("clicked");
   };
   return (
-    <Paper elevation={0} sx={{
-      marginLeft: {
-        xl: "240px",
-        sm: "240px",
-        lg: "240px",
-        md: "240px",
-        xs: "2em",
-      },
-      marginRight:{
-        xs:'2em'
-      }
-    }}>
-      <Grid sx={{marginLeft:'auto',marginRight:'auto',marginTop:'3em'}}  container xs={12} sm={10} md={8} lg={8} xl={8}  >
+    <Paper elevation={0} sx={{backgroundColor: "whitesmoke"}}>
+      <Grid sx={{marginLeft:'auto',marginRight:'auto',marginTop:'3em',}}  container xs={12} sm={10} md={8} lg={8} xl={8}  >
         <Grid   item container  direction="row" sx={{marginBottom:'2em'}}>
           <Grid   item xs={12} md={6}  lg={6} xl={6} >
             <Box sx={{display:{xs:'flex'},justifyContent:{xs:'center',xl:'flex-start',md:'flex-start',lg:'flex-start'},fontWeight:'bold'}} >
@@ -46,7 +35,7 @@ const Permissions: FC<any> = (): ReactElement => {
             </Box>
           </Grid>
         </Grid>
-        <Grid item container direction="row" justifyContent="center" alignItems="center">
+        <Grid item container direction="row" justifyContent="center" xs={12} sm={12} lg={12} md={12} xl={12} alignItems="center">
             <PermissionsTable />
         </Grid>
 

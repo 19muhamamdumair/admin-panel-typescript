@@ -1,131 +1,74 @@
-import React, { FC, ReactElement } from "react";
-import {
-  Box,
-  Link,
-  Container,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import { useState, useEffect } from "react";
+
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+
+import IconButton from "@mui/material/IconButton";
+
+import List from "@mui/material/List";
+
 import MenuIcon from "@mui/icons-material/Menu";
-import { routes } from "../routes";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import DropDown from "./AvatarDropDown";
 import { NavLink } from "react-router-dom";
+import getLocalStorageServices from "../services/local-storage.service";
 
-const Navbar: FC = (): ReactElement => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
+import { Link, FormControl, InputLabel, NativeSelect } from "@mui/material";
+import IUser from "../types/user.type";
+import Drawer from "./Drawer";
+const drawerWidth = 240;
 
-  const handleOpenNavMenu = (event: any) => {
-    setAnchorElNav(event.currentTarget);
-  };
+interface Props {
+  openMobile:any,
+  mobileOpenValue:any
+}
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
+export default function Navbar(props: Props) {
+  const {  } = props;
+  // const [mobileOpen, setMobileOpen] = useState<any>(false);
+  const [user, setUser] = useState<IUser>();
+
+  useEffect(() => {
+    setUser(getLocalStorageServices.getLocalStorageObject("user"));
+  }, []);
+  const handleDrawerToggle = () => {
+    props.openMobile(!props.mobileOpenValue)
   };
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        height: "auto",
-        backgroundColor: "secondary.main",
-      }}
-    >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-            }}
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        className="navbar-set"
+        sx={{
+          backgroundColor: "white",
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          ml: { sm: `${drawerWidth}px` },
+        }}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: "none" } }}
           >
-            Starter App
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {routes.map((page) => (
-                <Link
-                  key={page.key}
-                  component={NavLink}
-                  to={page.path}
-                  color="black"
-                  underline="none"
-                  variant="button"
-                >
-                  <MenuItem onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page.title}</Typography>
-                  </MenuItem>
-                </Link>
-              ))}
-            </Menu>
-          </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
-          >
-            React Starter App
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                marginLeft: "1rem",
-              }}
-            >
-              {routes.map((page) => (
-                <Link
-                  key={page.key}
-                  component={NavLink}
-                  to={page.path}
-                  color="black"
-                  underline="none"
-                  variant="button"
-                  sx={{ fontSize: "large", marginLeft: "2rem" }}
-                >
-                  {page.title}
-                </Link>
-              ))}
-            </Box>
+            <MenuIcon />
+          </IconButton>
+
+          <Box sx={{ marginLeft: "auto", marginRight: "1em", display: "flex" }}>
+            <DropDown />
           </Box>
         </Toolbar>
-      </Container>
+      </AppBar>
+
     </Box>
   );
-};
-
-export default Navbar;
+}
