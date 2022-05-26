@@ -15,7 +15,7 @@ type State = {
 
 
 const App: React.FC<any> = ({Props, State}) => {
-  const [currentUser, setCurrentUser] = useState()
+  const [currentUser, setCurrentUser] = useState<IUser>()
   // define theme
   
   useEffect(() => {
