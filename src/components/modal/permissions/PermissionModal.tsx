@@ -2,7 +2,7 @@ import React from "react";
 import "antd/dist/antd.css";
 import { Modal } from "antd";
 import Button from "@mui/material/Button";
-
+import Paper from "@mui/material/Paper";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import SearchIcon from "@mui/icons-material/Search";
@@ -44,6 +44,7 @@ const BasicModal = () => {
     setIsModalVisible(false);
   
   };
+  
 
   const closeToaster = (
     event: React.SyntheticEvent | Event,
@@ -57,16 +58,18 @@ const BasicModal = () => {
   };
 
   const action = (
-    <React.Fragment>
+    <React.Fragment >
       <IconButton
         size="small"
         aria-label="close"
-        color="inherit"
+        // color="inherit"
+        color="success" 
+        // bgcolor="success"
         onClick={closeToaster}
       >
         <CloseIcon fontSize="small" />
       </IconButton>
-    </React.Fragment>
+     </React.Fragment>
   );
 
   const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -239,14 +242,7 @@ const BasicModal = () => {
       >
         Create Permission Group
       </Button>
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={closeToaster}
-        message="Saved"
-        action={action}
-        sx={{ marginLeft: "240px" }}
-      />
+     
       <Modal
         title="Permission Group Name"
         visible={isModalVisible}
@@ -256,7 +252,11 @@ const BasicModal = () => {
         footer={[
           <Button
             key="back"
-            sx={{ border: "1px solid whitesmoke", color: "black" }}
+            onClick={handleCancel}
+            sx={{ border: "1px solid whitesmoke", color: "black",   
+          
+            textTransform: "none",
+          }}
            
           >
             Cancel
@@ -405,6 +405,16 @@ const BasicModal = () => {
 
         {children}
       </Modal>
+      <Paper >
+       <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={closeToaster}
+        message="Saved"
+        action={action}
+        sx={{ marginLeft: "240px",width:'200px'}}
+      />
+      </Paper>
     </>
   );
 };
