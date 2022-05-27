@@ -202,8 +202,18 @@ const BasicModal = () => {
 
     return (
         <>
-            <Button variant="contained" onClick={showModal}>
-                Open Modal
+             <Button
+              sx={{
+                  backgroundColor: "#47959e",
+                  color:'white',
+                  fontSize:'13px',
+                 textTransform:'none'
+              }}
+              variant="contained"
+              onClick={showModal}
+
+            >
+              Create Permission Group
             </Button>
             <Modal title="Permission Group Name" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
 
