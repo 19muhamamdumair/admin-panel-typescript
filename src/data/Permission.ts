@@ -5,7 +5,15 @@ export const permissionTypes = [
     },
     {
         id : 2,
-        name :"Permission Type 1"  
+        name :"Permission Type 2"  
+    },
+    {
+        id : 3,
+        name :"Permission Type 3"  
+    },
+    {
+        id : 4,
+        name :"Permission Type 4"  
     },
 ];
 

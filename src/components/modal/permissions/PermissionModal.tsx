@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import 'antd/dist/antd.css';
 import { Modal } from 'antd';
 import Button from '@mui/material/Button';
+import Paper from "@mui/material/Paper";
 
 
 
@@ -25,10 +26,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import Checkbox from "@mui/material/Checkbox";
 import { Menu } from "antd";
 import { IconButton, Snackbar, Typography } from "@mui/material";
-import {permission} from '../../../data/Permission'
-
+import { permission, permissionTypes, group_permissions } from '../../../data/Permission'
+import { makeStyles } from '@mui/styles';
 // import { makeStyles } from "@material-ui/";
-
+const useStyles = makeStyles({
+  root: {
+    background: "green"
+  },
+});
 const BasicModal = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [age, setAge] = React.useState('');
@@ -37,7 +42,10 @@ const BasicModal = () => {
   const [isSelectAllChecked, setIsSelectAllChecked] = useState<boolean>(false);
   const [permissionsInfo, setPermissionsInfo] = useState<any>(permission);
   const [open, setOpen] = React.useState(false);
+  const [selectValue, setSelectValue] = React.useState("");
 
+
+  const classes = useStyles()
   useEffect(() => {
     setPermissionsInfo(permissionsInfo.map((permission: any) => ({ ...permission, checked: isSelectAllChecked })));
   }, [isSelectAllChecked])
@@ -57,6 +65,14 @@ const BasicModal = () => {
     setIscheckBoxChecked(!ischeckBoxChecked)
   }
 
+
+  const handleToaster = () => {
+    setOpen(true);
+    setIsModalVisible(false);
+
+  };
+
+
   const closeToaster = (
     event: React.SyntheticEvent | Event,
     reason?: string
@@ -69,11 +85,13 @@ const BasicModal = () => {
   };
 
   const action = (
-    <React.Fragment>
+    <React.Fragment >
       <IconButton
         size="small"
         aria-label="close"
-        color="inherit"
+        // color="inherit"
+        color="success"
+        // bgcolor="success"
         onClick={closeToaster}
       >
         <CloseIcon fontSize="small" />
@@ -95,107 +113,87 @@ const BasicModal = () => {
     setIsModalVisible(false);
   };
 
-  const menu = (
-    <Menu
-        items={[
-            {
-                label: <a href="https://www.antgroup.com">1st menu item</a>,
-                key: '0',
-            },
-            {
-                label: <a href="https://www.aliyun.com">2nd menu item</a>,
-                key: '1',
-            },
-            {
-                type: 'divider',
-            },
-            {
-                label: '3rd menu item',
-                key: '3',
-            },
-        ]}
-    />
-);
-const BootstrapInput = styled(InputBase)(({ theme }) => ({
+
+  const BootstrapInput = styled(InputBase)(({ theme }) => ({
     'label + &': {
-        marginTop: theme.spacing(0),
+      marginTop: theme.spacing(0),
     },
     '& .MuiInputBase-input': {
-        borderRadius: 4,
-        position: 'relative',
-        width: 370,
-        height: 12,
-        backgroundColor: theme.palette.mode === 'light' ? '#fcfcfb' : '#2b2b2b',
-        border: '1px solid #ced4da',
-        fontSize: 16,
-        // width: 'auto',
-        padding: '10px 12px',
-        transition: theme.transitions.create([
-            'border-color',
-            'background-color',
-            'box-shadow',
-        ]),
-        // Use the system font instead of the default Roboto font.
-        fontFamily: [
-            '-apple-system',
-            'BlinkMacSystemFont',
-            '"Segoe UI"',
-            'Roboto',
-            '"Helvetica Neue"',
-            'Arial',
-            'sans-serif',
-            '"Apple Color Emoji"',
-            '"Segoe UI Emoji"',
-            '"Segoe UI Symbol"',
-        ].join(','),
-        '&:focus': {
-            boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
-            borderColor: theme.palette.primary.main,
-        },
+      borderRadius: 4,
+      position: 'relative',
+      width: 370,
+      height: 12,
+      backgroundColor: theme.palette.mode === 'light' ? '#fcfcfb' : '#2b2b2b',
+      border: '1px solid #ced4da',
+      fontSize: 16,
+      // width: 'auto',
+      padding: '10px 12px',
+      transition: theme.transitions.create([
+        'border-color',
+        'background-color',
+        'box-shadow',
+      ]),
+      // Use the system font instead of the default Roboto font.
+      fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
+      '&:focus': {
+        boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
+        borderColor: theme.palette.primary.main,
+      },
     },
-}));
+  }));
 
-const RedditTextField = styled((props: TextFieldProps) => (
+  const RedditTextField = styled((props: TextFieldProps) => (
     <TextField
-        InputProps={{ disableUnderline: true } as Partial<OutlinedInputProps>}
-        {...props}
+      InputProps={{ disableUnderline: true } as Partial<OutlinedInputProps>}
+      {...props}
     />
-))(({ theme }) => ({
+  ))(({ theme }) => ({
     '& .MuiFilledInput-root': {
-        border: '1px solid #e2e2e1',
-        overflow: 'hidden',
-        borderRadius: 4,
-        backgroundColor: theme.palette.mode === 'light' ? '#fcfcfb' : '#2b2b2b',
-        transition: theme.transitions.create([
-            'border-color',
-            'background-color',
-            'box-shadow',
-        ]),
-        '&:hover': {
-            backgroundColor: 'transparent',
-        },
-        '&.Mui-focused': {
-            backgroundColor: 'transparent',
-            boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
-            borderColor: theme.palette.primary.main,
-        },
+      border: '1px solid #e2e2e1',
+      overflow: 'hidden',
+      borderRadius: 4,
+      backgroundColor: theme.palette.mode === 'light' ? '#fcfcfb' : '#2b2b2b',
+      transition: theme.transitions.create([
+        'border-color',
+        'background-color',
+        'box-shadow',
+      ]),
+      '&:hover': {
+        backgroundColor: 'transparent',
+      },
+      '&.Mui-focused': {
+        backgroundColor: 'transparent',
+        boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
+        borderColor: theme.palette.primary.main,
+      },
     },
-}));
+  }));
 
-const ValidationTextField = styled(TextField)({
+  const ValidationTextField = styled(TextField)({
     '& input:valid + fieldset': {
-        borderColor: 'green',
-        borderWidth: 2,
+      borderColor: 'green',
+      borderWidth: 2,
     },
     '& input:invalid + fieldset': {
-        borderColor: 'red',
-        borderWidth: 2,
+      borderColor: 'red',
+      borderWidth: 2,
     },
     '& input:valid:focus + fieldset': {
-        borderLeftWidth: 6,
-        padding: '4px !important', // override inline-style
+      borderLeftWidth: 6,
+      padding: '4px !important', // override inline-style
     },
-});
+  });
 
   return (
     <>
@@ -212,7 +210,43 @@ const ValidationTextField = styled(TextField)({
       >
         Create Permission Group
       </Button>
-      <Modal title="Permission Group Name" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+      <Modal
+        title="Permission Group Name"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+
+        footer={[
+          <Button
+            key="back"
+            onClick={handleCancel}
+            sx={{
+              border: "1px solid whitesmoke", color: "black",
+
+              textTransform: "none",
+            }}
+
+          >
+            Cancel
+          </Button>,
+          <Button
+            key="save"
+            onClick={handleToaster}
+            sx={{
+              backgroundColor: "#47959e",
+              color: "white",
+
+              textTransform: "none",
+              marginLeft: "1em",
+              width: "3em",
+              height: "2.5em",
+            }}
+            variant="contained"
+          >
+            Save
+          </Button>,
+        ]}
+      >
 
         <Box sx={{ mt: 2, fontSize: 12, fontWeight: 'bold' }}>Permissions Group Name</Box>
 
@@ -231,35 +265,49 @@ const ValidationTextField = styled(TextField)({
 
 
         <Box sx={{ display: 'flex', mt: 2, height: 20 }}>
-          <FormControl >
-            <InputLabel sx={{ fontSize: 11, fontWeight: 'bold' }} id="demo-simple-select-label">Existing</InputLabel>
+          <FormControl>
+            <InputLabel
+              sx={{ fontSize: 11, fontWeight: "bold" }}
+              id="demo-simple-select-label"
+            >
+              Permission Type
+            </InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={name}
-              sx={{ width: 130, height: 40, mb: 3 }}
-              label="Age"
+              sx={{ width: 129, height: 40, mb: 3 }}
+              label="Permission"
               onChange={(e) => setName(e.target.value)}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {
+                permissionTypes.map((type)=>(
+                  <MenuItem value={type.name} key={type.id}>{type.name}</MenuItem>
+                ))
+              }
             </Select>
           </FormControl>
           <FormControl sx={{ width: 120 }}>
-            <InputLabel sx={{ fontSize: 11, fontWeight: 'bold' }} id="demo-simple-select">Permission</InputLabel>
-            <Select
-              labelId="demo-simple-select"
-              id="demo-simple-select"
-              value={age}
-              sx={{ width: 130, height: 40, mb: 3, p: 1 }}
-
-              label="Age"
-              onChange={(e) => setAge(e.target.value)}
+            <InputLabel
+              variant="outlined"
+              sx={{ fontSize: "11px", fontWeight: "bold" }}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              Existing Groups
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={selectValue}
+              sx={{ width: 129, height: 40, mb: 3, p: 1, color: "black" }}
+              label="Existing Gr"
+              variant="outlined"
+              onChange={(e) => setSelectValue(e.target.value)}
+            >
+              {
+                group_permissions.map((singleGroup) => (
+                  <MenuItem value={singleGroup.name}>{singleGroup.name}</MenuItem>
+                ))
+              }
             </Select>
           </FormControl>
           <Button variant="outlined" sx={{ width: 120, height: 40, ml: 1, mb: 3, fontSize: 9, color: "black", borderColor: "lightgrey" }}>More Filters</Button>
@@ -276,12 +324,29 @@ const ValidationTextField = styled(TextField)({
             <Checkbox onChange={(e: any, checked: boolean) => { setIsSelectAllChecked(checked) }} />  Select All </Button>
 
         </Box>
-        {permissionsInfo.map((data: any) => (
-          // <div> 
-          <FormControlLabel control={<Checkbox onChange={permissionSelection} checked={data.checked} value={data.id} />} label={data.label} />
-          // </div>
-        ))}
+        <Box sx={{ display: "flex", flexDirection:"column", mb: 0 }}>
+          {permissionsInfo.map((data: any) => (
+            // <div> 
+            <FormControlLabel control={<Checkbox onChange={permissionSelection} checked={data.checked} value={data.id} />} label={data.label} />
+            // </div>
+          ))}
+        </Box>
       </Modal>
+      <Paper >
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={closeToaster}
+          message="Saved"
+          // action={action}
+          ContentProps={{
+            classes: {
+              root: classes.root
+            }
+          }}
+          sx={{ marginLeft: "240px", width: '200px', backgroundColor: "green !important", '&.MuiPaper-root-MuiSnackbarContent-root': { backgroundColor: 'green' } }}
+        />
+      </Paper>
     </>
   );
 };
