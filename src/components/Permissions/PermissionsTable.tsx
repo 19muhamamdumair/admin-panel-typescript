@@ -6,21 +6,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Grid, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { group_permissions } from "../../data/Permission";
 
-function createData(name: string, permissions: string) {
-  return { name, permissions };
-}
 
-const rows = [
-  createData("Admin Permissions", "25 permissions "),
-  createData("Admin Permissions", "25 permissions "),
-  createData("Admin Permissions", "25 permissions "),
-  createData("Admin Permissions", "25 permissions "),
-  createData("Admin Permissions", "25 permissions "),
-];
 export default function PermissionsTable() {
+
+
   return (
 
       <TableContainer
@@ -28,12 +19,12 @@ export default function PermissionsTable() {
       >
         <Table sx={{ }} aria-label="simple table">
           <TableBody>
-            {rows.map((row) => (
+            {group_permissions.map((row) => (
               <TableRow key={row.name} sx={{ border: 0 }}>
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
-                <TableCell
+                 <TableCell
                   sx={{
                     color: "#7480b2",
                     textDecoration: "underline",
@@ -41,7 +32,7 @@ export default function PermissionsTable() {
                     overflow: "hidden",
                   }}
                 >
-                  {row.permissions}
+                  {row.permissions.length} permissions
                 </TableCell>
               </TableRow>
             ))}
