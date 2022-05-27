@@ -26,7 +26,7 @@ export default function PermissionsTable() {
       <TableContainer
         component={Paper}
       >
-        <Table sx={{ minWidth: 450 }} aria-label="simple table">
+        <Table sx={{ }} aria-label="simple table">
           <TableBody>
             {rows.map((row) => (
               <TableRow key={row.name} sx={{ border: 0 }}>
