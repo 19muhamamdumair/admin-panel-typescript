@@ -1,4 +1,6 @@
 import React, { useEffect, FC, ReactElement, useState } from "react";
+
+
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -23,6 +25,7 @@ const App: React.FC<any> = ({Props, State}) => {
   
   useEffect(() => {
       setCurrentUser(undefined)
+      
       const user = AuthService.getCurrentUser();
       if (user) setCurrentUser(user)
       else AuthService.dummyLogin()
