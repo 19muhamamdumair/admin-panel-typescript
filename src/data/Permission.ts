@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 export const permissionTypes = [
      {
         id : 1,
@@ -82,7 +81,6 @@ export const permission = [
     
     
 ]
-=======
 export const group_permissions = [
     {
         id : 1,
@@ -138,4 +136,3 @@ export const group_permissions = [
         ]
     },
 ]
->>>>>>> origin/permission_modal_alert_styling_data_structure
