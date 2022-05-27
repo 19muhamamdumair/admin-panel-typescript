@@ -21,6 +21,7 @@ node_modules/
 .DS_Store
 .idea
 .vscode
+yarn.lock
 ~
 package-lock.json
 yarn.lock
