@@ -36,7 +36,7 @@ export default function BasicMenu() {
         onClick={handleClick}
         
       >
-         <Avatar alt="Travis Howard me-5" src="/static/images/avatar/2.jpg"  > {user?.firstname?.charAt(0)}{user?.lastname?.charAt(0)}</Avatar>
+         <Avatar alt="Travis Howard me-5" src="/static/images/avatar/2.jpg" sx={{color:'black',backgroundColor:'#47959e'}} > {user?.firstname?.charAt(0)}{user?.lastname?.charAt(0)}</Avatar>
          <Typography color='black' sx={{textTransform:'none',marginLeft:"8px"}}>
          {user?.firstname + " "+ user?.lastname}
          </Typography>

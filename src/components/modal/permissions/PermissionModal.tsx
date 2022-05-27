@@ -25,9 +25,27 @@ import { Typography } from '@mui/material';
 
 
 
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import SearchIcon from "@mui/icons-material/Search";
+import TextField, { TextFieldProps } from "@mui/material/TextField";
+import { alpha, styled } from "@mui/material/styles";
+import { OutlinedInputProps } from "@mui/material/OutlinedInput";
+import InputBase from "@mui/material/InputBase";
 
+import { useState } from "react";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import CloseIcon from "@mui/icons-material/Close";
 
+import Checkbox from "@mui/material/Checkbox";
+import {  Menu } from "antd";
+import { IconButton, Snackbar, Typography } from "@mui/material";
 
+import { makeStyles } from "@material-ui/styles";
 
 const BasicModal = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -57,119 +75,67 @@ const permissionSelection = (event : any, checked : boolean) => {
     setIscheckBoxChecked(!ischeckBoxChecked)
 }
   
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
+  };
 
-    const handleOk = () => {
-        setIsModalVisible(false);
-    };
+  const closeToaster = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
-    const handleCancel = () => {
-        setIsModalVisible(false);
-    };
-    const menu = (
-        <Menu
-            items={[
-                {
-                    label: <a href="https://www.antgroup.com">1st menu item</a>,
-                    key: '0',
-                },
-                {
-                    label: <a href="https://www.aliyun.com">2nd menu item</a>,
-                    key: '1',
-                },
-                {
-                    type: 'divider',
-                },
-                {
-                    label: '3rd menu item',
-                    key: '3',
-                },
-            ]}
-        />
-    );
-    const BootstrapInput = styled(InputBase)(({ theme }) => ({
-        'label + &': {
-            marginTop: theme.spacing(0),
-        },
-        '& .MuiInputBase-input': {
-            borderRadius: 4,
-            position: 'relative',
-            width: 370,
-            height: 12,
-            backgroundColor: theme.palette.mode === 'light' ? '#fcfcfb' : '#2b2b2b',
-            border: '1px solid #ced4da',
-            fontSize: 16,
-            // width: 'auto',
-            padding: '10px 12px',
-            transition: theme.transitions.create([
-                'border-color',
-                'background-color',
-                'box-shadow',
-            ]),
-            // Use the system font instead of the default Roboto font.
-            fontFamily: [
-                '-apple-system',
-                'BlinkMacSystemFont',
-                '"Segoe UI"',
-                'Roboto',
-                '"Helvetica Neue"',
-                'Arial',
-                'sans-serif',
-                '"Apple Color Emoji"',
-                '"Segoe UI Emoji"',
-                '"Segoe UI Symbol"',
-            ].join(','),
-            '&:focus': {
-                boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
-                borderColor: theme.palette.primary.main,
-            },
-        },
-    }));
+    setOpen(false);
+  };
 
-    const RedditTextField = styled((props: TextFieldProps) => (
-        <TextField
-            InputProps={{ disableUnderline: true } as Partial<OutlinedInputProps>}
-            {...props}
-        />
-    ))(({ theme }) => ({
-        '& .MuiFilledInput-root': {
-            border: '1px solid #e2e2e1',
-            overflow: 'hidden',
-            borderRadius: 4,
-            backgroundColor: theme.palette.mode === 'light' ? '#fcfcfb' : '#2b2b2b',
-            transition: theme.transitions.create([
-                'border-color',
-                'background-color',
-                'box-shadow',
-            ]),
-            '&:hover': {
-                backgroundColor: 'transparent',
-            },
-            '&.Mui-focused': {
-                backgroundColor: 'transparent',
-                boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
-                borderColor: theme.palette.primary.main,
-            },
-        },
-    }));
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={closeToaster}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
-    const ValidationTextField = styled(TextField)({
-        '& input:valid + fieldset': {
-            borderColor: 'green',
-            borderWidth: 2,
-        },
-        '& input:invalid + fieldset': {
-            borderColor: 'red',
-            borderWidth: 2,
-        },
-        '& input:valid:focus + fieldset': {
-            borderLeftWidth: 6,
-            padding: '4px !important', // override inline-style
-        },
-    });
-   
+  const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked([
+      event.target.checked,
+      event.target.checked,
+      event.target.checked,
+      event.target.checked,
+    ]);
+  };
+
+  const handleChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked([event.target.checked, checked[1]]);
+  };
+
+  const handleChange3 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked([checked[0], event.target.checked]);
+  };
+  const handleChange4 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked([checked[3], event.target.checked]);
+  };
+  const handleChange5 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked([checked[2], event.target.checked]);
+  };
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  
 
 
     return (

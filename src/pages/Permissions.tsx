@@ -9,7 +9,7 @@ const Permissions: FC<any> = (): ReactElement => {
   
   return (
     <Paper elevation={0} sx={{backgroundColor: "whitesmoke"}}>
-      <Grid sx={{marginLeft:'auto',marginRight:'auto',marginTop:'3em',}}  container xs={12} sm={10} md={8} lg={8} xl={8}  >
+      <Grid item sx={{marginLeft:'auto',marginRight:'auto',marginTop:'3em',}}  container xs={12} sm={10} md={8} lg={8} xl={8}  >
         <Grid   item container  direction="row" sx={{marginBottom:'2em'}}>
           <Grid   item xs={12} md={6}  lg={6} xl={6} >
             <Box sx={{display:{xs:'flex'},justifyContent:{xs:'center',xl:'flex-start',md:'flex-start',lg:'flex-start'},fontWeight:'bold'}} >
