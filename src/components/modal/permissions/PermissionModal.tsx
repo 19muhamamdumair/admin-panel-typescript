@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'antd/dist/antd.css';
 import { Modal } from 'antd';
 import Button from '@mui/material/Button';
@@ -16,15 +16,12 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-// import Input from '@mui/material/Input';
-// import InputAdornment from '@mui/material/InputAdornment';
+import {permission} from '../../../data/Permission'
 
 
 import Checkbox from '@mui/material/Checkbox';
-// import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Space } from 'antd';
 import { Typography } from '@mui/material';
-
 
 
 
@@ -36,31 +33,29 @@ const BasicModal = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [age, setAge] = React.useState('');
     const [name, setName] = React.useState('');
-    const [checked, setChecked] = React.useState([true, false]);
+    const [ischeckBoxChecked, setIscheckBoxChecked] = useState<boolean>(false);
+    const [isSelectAllChecked, setIsSelectAllChecked] = useState<boolean>(false);
+    const [permissionsInfo, setPermissionsInfo] = useState<any>(permission);
 
-    const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked([event.target.checked, event.target.checked, event.target.checked, event.target.checked]);
-      };
     
-      const handleChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked([event.target.checked, checked[1]]);
-      };
-    
-      const handleChange3 = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked([checked[0], event.target.checked]);
-      };
-      const handleChange4 = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked([checked[3], event.target.checked]);
-      };
-      const handleChange5 = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked([checked[2], event.target.checked]);
-      };
-     
+     useEffect(() => {
+        setPermissionsInfo(permissionsInfo.map((permission : any) => ({...permission,checked: isSelectAllChecked})));
+     },[isSelectAllChecked])
       
 
 
+    
+const permissionSelection = (event : any, checked : boolean) => {
+    console.log(event,checked)
+    permissionsInfo.map((permission:any,index : number) => {
+        if(permission.id == event.target.value){
+            permissionsInfo[index].checked = !permission.checked
+        }
+    })
 
-
+    setPermissionsInfo(permissionsInfo)
+    setIscheckBoxChecked(!ischeckBoxChecked)
+}
   
     const showModal = () => {
         setIsModalVisible(true);
@@ -174,30 +169,7 @@ const BasicModal = () => {
             padding: '4px !important', // override inline-style
         },
     });
-    const children = (
-        <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-          <FormControlLabel
-            label="Permission 1"
-            control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-          />
-          <FormControlLabel
-            label="Permission 2"
-            control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-          />
-          <FormControlLabel
-            label="Permission 3"
-            control={<Checkbox checked={checked[2]} onChange={handleChange4} />}
-          />
-           <FormControlLabel
-            label="Permission 4"
-            control={<Checkbox checked={checked[3]} onChange={handleChange5} />}
-          />
-          
-          
-         
-          
-        </Box>
-      );
+   
 
 
     return (
@@ -275,28 +247,15 @@ const BasicModal = () => {
                     }}>PERMISSION TYPE NAME OR ROLE NAME</Typography>
 
 
-                    <Button variant="outlined" sx={{ height: 40, ml: 10, color: "black", borderColor: 'lightgrey', px: 1, mt: 1, fontSize: 10 }}>     {
-          <Checkbox
-            checked={checked[0] && checked[1] && checked[2] && checked[3] }
-            // indeterminate={checked[0] !== checked[1]}
-            onChange={handleChange1}
-          />
-        }
-      Select All </Button>
+                    <Button variant="outlined" sx={{ height: 40, ml: 10, color: "black", borderColor: 'lightgrey', px: 1, mt: 1, fontSize: 10 }}> 
+                    <Checkbox onChange={(e : any, checked : boolean)=>{setIsSelectAllChecked(checked)}}/>  Select All </Button>
 
                 </Box>
-
-
-            
-            {children}
-
-
-
-
-
-
-
-
+          {permissionsInfo.map((data: any) => (   
+        <div> 
+            <FormControlLabel control={<Checkbox onChange={permissionSelection} checked={data.checked} value={data.id} />} label={data.label} />
+        </div>
+        ))}   
             </Modal>
         </>
     );
