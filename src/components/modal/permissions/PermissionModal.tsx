@@ -28,6 +28,7 @@ import { Menu } from "antd";
 import { IconButton, Snackbar, Typography } from "@mui/material";
 import { permission, permissionTypes, group_permissions } from '../../../data/Permission'
 import { makeStyles } from '@mui/styles';
+import { flexbox } from '@mui/system';
 // import { makeStyles } from "@material-ui/";
 const useStyles = makeStyles({
   root: {
@@ -250,21 +251,30 @@ const BasicModal = () => {
 
         <Box sx={{ mt: 2, fontSize: 12, fontWeight: 'bold' }}>Permissions Group Name</Box>
 
-        <FormControl sx={{ width: 370 }} variant="standard">
+        <FormControl sx={{ width: {xl:370,lg:370,md:370,xs:"100%"} }} variant="standard">
           <InputLabel shrink htmlFor="bootstrap-input">
           </InputLabel>
           <BootstrapInput placeholder="Permissions Group Name" id="bootstrap-input" />
         </FormControl>
         <Box sx={{ mt: 2, fontSize: 12, fontWeight: 'bold' }}>Filter Permission</Box>
 
-        <FormControl sx={{ width: 370 }} variant="standard">
+        <FormControl sx={{ width: {xl:370,lg:370,md:370,xs:"100%"} }} variant="standard">
           <InputLabel placeholder="Filter by Permissions Name" shrink htmlFor="bootstrap-input">
           </InputLabel>
           <BootstrapInput id="bootstrap-input" placeholder='Filter by Permission Name' />
         </FormControl>
 
 
-        <Box sx={{ display: 'flex', mt: 2, height: 20 }}>
+        <Box sx={{ 
+          display: 'flex',
+          flexDirection: {
+            xs : "column",
+            lg : "row",
+            sm : "row",
+            xl : "row",
+          },
+          mt: 4,
+          }}>
           <FormControl>
             <InputLabel
               sx={{ fontSize: 11, fontWeight: "bold" }}
@@ -276,7 +286,13 @@ const BasicModal = () => {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={name}
-              sx={{ width: 129, height: 40, mb: 3 }}
+              sx={{ 
+                width: {
+                  xl:129, lg:129, md:129, xs : "unset", 
+                },
+                height: 40,
+                mb: 3
+               }}
               label="Permission"
               onChange={(e) => setName(e.target.value)}
             >
@@ -287,7 +303,7 @@ const BasicModal = () => {
               }
             </Select>
           </FormControl>
-          <FormControl sx={{ width: 120 }}>
+          <FormControl >
             <InputLabel
               variant="outlined"
               sx={{ fontSize: "11px", fontWeight: "bold" }}
@@ -298,7 +314,11 @@ const BasicModal = () => {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={selectValue}
-              sx={{ width: 129, height: 40, mb: 3, p: 1, color: "black" }}
+              sx={{ 
+                width: {
+                  xl:129, lg:129, md:129, xs : "unset", 
+                },
+                height: 40, mb: 3, p: 1, color: "black" }}
               label="Existing Gr"
               variant="outlined"
               onChange={(e) => setSelectValue(e.target.value)}
@@ -310,7 +330,7 @@ const BasicModal = () => {
               }
             </Select>
           </FormControl>
-          <Button variant="outlined" sx={{ width: 120, height: 40, ml: 1, mb: 3, fontSize: 9, color: "black", borderColor: "lightgrey" }}>More Filters</Button>
+          <Button variant="outlined" sx={{ width: 120, height: 40, ml: {xs:0,lg:0,xl:0,sm:0}, mb: 3, fontSize: 9, color: "black", borderColor: "lightgrey" }}>More Filters</Button>
 
         </Box>
         <Box sx={{ display: "flex", mt: 4, mb: 0 }}>
@@ -320,7 +340,7 @@ const BasicModal = () => {
           }}>PERMISSION TYPE NAME OR ROLE NAME</Typography>
 
 
-          <Button variant="outlined" sx={{ height: 40, ml: 10, color: "black", borderColor: 'lightgrey', px: 1, mt: 1, fontSize: 10 }}>
+          <Button variant="outlined" sx={{ height: 40, ml: {lg:10,md:10,xl:10,sm:10,xs:"unset"}, color: "black", borderColor: 'lightgrey', px: 1, mt: 1, fontSize: 10 }}>
             <Checkbox onChange={(e: any, checked: boolean) => { setIsSelectAllChecked(checked) }} />  Select All </Button>
 
         </Box>
