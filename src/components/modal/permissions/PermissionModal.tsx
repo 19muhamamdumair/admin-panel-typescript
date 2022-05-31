@@ -38,8 +38,8 @@ import { flexbox } from "@mui/system";
 import Permissions from "../../../pages/Permissions";
 
 const useStyles = makeStyles({
-  root: {
-    background: "green",
+  toasterColor: {
+    background: "#28a745",
   },
   flow: {
     overflowX: "hidden",
@@ -47,33 +47,25 @@ const useStyles = makeStyles({
 });
 const BasicModal = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [age, setAge] = React.useState("");
-  const [name, setName] = React.useState("");
+
   const [ischeckBoxChecked, setIscheckBoxChecked] = useState<boolean>(false);
   const [isSelectAllChecked, setIsSelectAllChecked] = useState<boolean>(false);
   const [permissionsInfo, setPermissionsInfo] = useState<any>(permission);
+  const [allPermissions, setAllPermissions] = useState<any>(permission);
   const [open, setOpen] = React.useState(false);
-  const [selectValue, setSelectValue] = React.useState("");
-  const [groupPermissionName,setGroupPermissionName]=React.useState("")
-const [flag,setFlag]=React.useState(0);
-const [filterPermissionIds,setFilterPermissionIds]=useState<any>([])
-const[allPermissionIds,setAllPermissionIds]=useState<any>({
-  id:null,
-  name:""
-})
+ 
+  const [groupPermissionName, setGroupPermissionName] = useState<string>("");
+  const [flag, setFlag] = React.useState(0);
+  const [permissionType, setPermissionType] = useState<string>("");
+  const [permissionTypeId, setPermissionTypeId] = useState<any>();
+
+  const [groupFlag, setGroupFlag] = useState<boolean>(false);
+  const [typeFlag, setTypeFlag] = useState<boolean>(false);
   const classes = useStyles();
-  useEffect(()=>{
-    permissionsInfo.map((p:any)=>{
-      setAllPermissionIds({
-        id:p.id,
-        name:p.name
-      })
-    })
-    console.log(allPermissionIds)
-  },[])
+  const [groupData, setGroupData] = useState<any>([{}]);
+  const [typeData, setTypeData] = useState<any>([{}]);
   useEffect(() => {
-    if(flag)
-    {
+    if (flag) {
       setPermissionsInfo(
         permissionsInfo.map((permission: any) => ({
           ...permission,
@@ -81,44 +73,105 @@ const[allPermissionIds,setAllPermissionIds]=useState<any>({
         }))
       );
     }
-    setFlag(1)
+    setFlag(1);
   }, [isSelectAllChecked]);
-const handleSelectChange=(targetValue:any)=>{
-  console.log("target value",targetValue)
-  console.log("select value",selectValue)
-  setGroupPermissionName(targetValue)
-}
-const filterPermission=()=>{
-  console.log("filterPermission",group_permissions)
-  let initialarr:any
-  let newarr:any=[];
 
-  if(groupPermissionName!=="")
-  {
-    group_permissions.map((singleGroup)=>{
-      if(singleGroup.name===groupPermissionName)
-      {
-        singleGroup.permissions.map((singlePermission)=>{
-          // console.log(singlePermission.permission_id),
-          newarr.push(...filterPermissionIds,singlePermission.permission_id)
-        })
+  useEffect(() => {
+    if (groupPermissionName !== "" && groupPermissionName !== "none") {
+      setGroupFlag(true);
+      filterGroupPermission();
+    } else {
+      setGroupFlag(false);
+    }
+    if (permissionType !== "none" && groupPermissionName === "none") {
+      setPermissionsInfo(typeData);
+    }
+  }, [groupPermissionName]);
+
+  useEffect(() => {
+    if (permissionType !== "" && permissionType !== "none") {
+      setTypeFlag(true);
+      filterTypePermission();
+    } else {
+      setTypeFlag(false);
+    }
+    if (permissionType === "none" && groupPermissionName !== "none") {
+      setPermissionsInfo(groupData);
+    }
+  }, [permissionType]);
+  useEffect(() => {
+    if (
+      (permissionType === "none" && groupPermissionName === "none") ||
+      (permissionType === "" && groupPermissionName === "") ||
+      (permissionType === "none" && groupPermissionName === "") ||
+      (permissionType === "" && groupPermissionName === "none")
+    ) {
+      setPermissionsInfo(allPermissions);
+    }
+  }, [permissionType, groupPermissionName]);
+  const filterTypePermission = () => {
+    let filterId: any;
+    permissionTypes.find((type) => {
+      if (type.name === permissionType) {
+        filterId = type.id;
       }
-    })
-    setFilterPermissionIds(newarr)
-    // console.log(filterPermissionIds)
-    console.log(filterPermissionIds)
-  }
- 
-  // else
-  {
+    });
 
-  }
-}
-useEffect(()=>{
-  console.log(filterPermissionIds)
-},[])
+    setPermissionTypeId(filterId);
+
+    let filterData = allPermissions.filter((permission: any) => {
+      return permission.permission_type_id === filterId;
+    });
+
+    setTypeData(filterData);
+
+    if (groupFlag) {
+      groupFlagFunction(groupData, filterData);
+    } else {
+      setPermissionsInfo(filterData);
+    }
+  };
+  const groupFlagFunction = (filterPermissionIds: any, filterData: any) => {
+    let newData: any = [];
+
+    filterPermissionIds.map((permission: any) => {
+      let tempData = filterData.find(
+        (data: any) => permission.permission_id === data.permission_id
+      );
+      if (tempData) {
+        newData.push(tempData);
+      }
+    });
+    setPermissionsInfo(newData);
+  };
+  const filterGroupPermission = () => {
+    let newarr: any = [];
+    group_permissions.map((singleGroup) => {
+      if (singleGroup.name === groupPermissionName) {
+        newarr = singleGroup.permissions.map((f) => f.permission_id);
+      }
+    });
+
+    let filterData: any = [];
+    for (let i = 0; i < newarr.length; i++) {
+      let tempPermission = allPermissions.find(
+        (permission: any) => permission.permission_id === newarr[i]
+      );
+
+      if (tempPermission) {
+        filterData.push(tempPermission);
+      }
+    }
+
+    setGroupData(filterData);
+    if (typeFlag) {
+      groupFlagFunction(typeData, filterData);
+    } else {
+      setPermissionsInfo(filterData);
+    }
+  };
+
   const permissionSelection = (event: any, checked: boolean) => {
-    console.log(event, checked);
     permissionsInfo.map((permission: any, index: number) => {
       if (permission.id == event.target.value) {
         permissionsInfo[index].checked = !permission.checked;
@@ -145,21 +198,7 @@ useEffect(()=>{
     setOpen(false);
   };
 
-  const action = (
-    <React.Fragment>
-      <IconButton
-        size="small"
-        aria-label="close"
-        // color="inherit"
-        color="success"
-        // bgcolor="success"
-        onClick={closeToaster}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
+ 
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -180,14 +219,13 @@ useEffect(()=>{
       backgroundColor: theme.palette.mode === "light" ? "#fcfcfb" : "#2b2b2b",
       border: "1px solid #ced4da",
       fontSize: 16,
-      // width: 'auto',
       padding: "10px 12px",
       transition: theme.transitions.create([
         "border-color",
         "background-color",
         "box-shadow",
       ]),
-      // Use the system font instead of the default Roboto font.
+
       fontFamily: [
         "-apple-system",
         "BlinkMacSystemFont",
@@ -207,47 +245,7 @@ useEffect(()=>{
     },
   }));
 
-  const RedditTextField = styled((props: TextFieldProps) => (
-    <TextField
-      InputProps={{ disableUnderline: true } as Partial<OutlinedInputProps>}
-      {...props}
-    />
-  ))(({ theme }) => ({
-    "& .MuiFilledInput-root": {
-      border: "1px solid #e2e2e1",
-      overflow: "hidden",
-      borderRadius: 4,
-      backgroundColor: theme.palette.mode === "light" ? "#fcfcfb" : "#2b2b2b",
-      transition: theme.transitions.create([
-        "border-color",
-        "background-color",
-        "box-shadow",
-      ]),
-      "&:hover": {
-        backgroundColor: "transparent",
-      },
-      "&.Mui-focused": {
-        backgroundColor: "transparent",
-        boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
-        borderColor: theme.palette.primary.main,
-      },
-    },
-  }));
-
-  const ValidationTextField = styled(TextField)({
-    "& input:valid + fieldset": {
-      borderColor: "green",
-      borderWidth: 2,
-    },
-    "& input:invalid + fieldset": {
-      borderColor: "red",
-      borderWidth: 2,
-    },
-    "& input:valid:focus + fieldset": {
-      borderLeftWidth: 6,
-      padding: "4px !important", // override inline-style
-    },
-  });
+ 
 
   return (
     <>
@@ -354,7 +352,7 @@ useEffect(()=>{
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={name}
+                      value={permissionType}
                       sx={{
                         width: {
                           xl: "100%",
@@ -365,10 +363,14 @@ useEffect(()=>{
                         },
                         height: 40,
                         mb: 1,
+                        fontSize: "9px",
                       }}
-                      label="Permission"
-                      onChange={(e) => setName(e.target.value)}
+                      label="Permission Type dsfs"
+                      onChange={(e) => setPermissionType(e.target.value)}
                     >
+                      <MenuItem value="none" key="0">
+                        None
+                      </MenuItem>
                       {permissionTypes.map((type) => (
                         <MenuItem value={type.name} key={type.id}>
                           {type.name}
@@ -394,7 +396,7 @@ useEffect(()=>{
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={selectValue}
+                      value={groupPermissionName}
                       sx={{
                         width: {
                           xl: "100%",
@@ -407,17 +409,20 @@ useEffect(()=>{
                         mb: 1,
                         p: 1,
                         color: "black",
+                        fontSize: "9px",
                       }}
-                      label="Existing Gr"
+                      label="Existing Groupsssss"
                       variant="outlined"
-                      // onChange={(e:any)=>handleSelectChange(e.target.value)}
-                      onChange={(e) =>{ 
-                        setGroupPermissionName(e.target.value)
-                        filterPermission()
-                      }}
+                      onChange={(e) => setGroupPermissionName(e.target.value)}
                     >
+                      <MenuItem value="none" key="0">
+                        None
+                      </MenuItem>
                       {group_permissions.map((singleGroup) => (
-                        <MenuItem key={singleGroup.name} value={singleGroup.name}>
+                        <MenuItem
+                          key={singleGroup.name}
+                          value={singleGroup.name}
+                        >
                           {singleGroup.name}
                         </MenuItem>
                       ))}
@@ -509,8 +514,7 @@ useEffect(()=>{
                     <Checkbox
                       onChange={(e: any, checked: boolean) => {
                         setIsSelectAllChecked(checked);
-                        setFlag(1)
-                       
+                        setFlag(1);
                       }}
                     />
                     Select All{" "}
@@ -519,9 +523,7 @@ useEffect(()=>{
               </Box>
               <Grid sx={{ mt: { lg: -4, xl: -4, md: -4, sm: -4 } }}>
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
-                  {groupPermissionName && groupPermissionName!==""&&
-                  permissionsInfo.map((data: any) => (
-                    // <div>
+                  {permissionsInfo.map((data: any) => (
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -531,11 +533,9 @@ useEffect(()=>{
                         />
                       }
                       label={data.label}
+                      key={data.id}
                     />
-                    // </div>
-                  ))
-                  }
-                  
+                  ))}
                 </Box>
               </Grid>
             </Grid>
@@ -579,10 +579,9 @@ useEffect(()=>{
           autoHideDuration={6000}
           onClose={closeToaster}
           message="Saved"
-          // action={action}
           ContentProps={{
             classes: {
-              root: classes.root,
+              root: classes.toasterColor,
             },
           }}
           sx={{

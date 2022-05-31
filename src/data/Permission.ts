@@ -56,7 +56,7 @@ export const permission = [
         label: "Permission 5",
         value: "Permission 5",
         checked: false,
-        permission_type_id : 5
+        permission_type_id : 3
 
     },
     {
@@ -65,7 +65,7 @@ export const permission = [
         label: "Permission 6",
         value: "Permission 6",
         checked: false,
-        permission_type_id : 6
+        permission_type_id : 2
 
     },
     {
@@ -74,7 +74,7 @@ export const permission = [
         label: "Permission 7",
         value: "Permission 7",
         checked: false,
-        permission_type_id : 7
+        permission_type_id : 4
 
     },
     {
@@ -83,7 +83,7 @@ export const permission = [
         label: "Permission 8",
         value: "Permission 8",
         checked: false,
-        permission_type_id : 8
+        permission_type_id : 1
 
     },
     

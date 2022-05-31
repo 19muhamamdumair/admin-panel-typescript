@@ -16,8 +16,7 @@ export default function BasicMenu() {
   useEffect(() => {
 
     setUser(getLocalStorageServices.getLocalStorageObject("user"));
-    console.log(user)
-    // debugger
+  
   },[])
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

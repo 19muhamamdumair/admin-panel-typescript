@@ -33,12 +33,10 @@ const App: React.FC<any> = ({Props, State}) => {
     
   }, [])
   const openMobile=()=>{
-    console.log(mobileOpen)
+   
     setMobileOpen(!mobileOpen)
   }
-  useEffect(() =>{
-    // console.log("asdasd",mobileOpen)
-  },[mobileOpen])
+ 
 
   const theme = createTheme({
     palette: {
