@@ -98,7 +98,7 @@ export const group_permissions = [
                 permission_id : 1,
                 sub_permissions : [1,2,3]
             }, {
-                permission_id : 1,
+                permission_id : 2,
                 sub_permissions : [1,2,3]
             }
         ]
@@ -109,6 +109,13 @@ export const group_permissions = [
         permissions : [
             {
                 permission_id : 1,
+                sub_permissions : [1,2,3]
+            }
+            , {
+                permission_id : 2,
+                sub_permissions : [1,2,3]
+            }, {
+                permission_id : 3,
                 sub_permissions : [1,2,3]
             }
         ]
@@ -128,7 +135,14 @@ export const group_permissions = [
         name : "Permissions Group 3",
         permissions : [
             {
-                permission_id : 1,
+                permission_id : 4,
+                sub_permissions : [1,2,3]
+            },
+            {
+                permission_id : 5,
+                sub_permissions : [1,2,3]
+            }, {
+                permission_id : 3,
                 sub_permissions : [1,2,3]
             }
         ]
@@ -138,7 +152,17 @@ export const group_permissions = [
         name : "Permissions Group 4",
         permissions : [
             {
-                permission_id : 1,
+                permission_id : 8,
+                sub_permissions : [1,2,3]
+            },  {
+                permission_id : 7,
+                sub_permissions : [1,2,3]
+            },
+            {
+                permission_id : 2,
+                sub_permissions : [1,2,3]
+            }, {
+                permission_id : 6,
                 sub_permissions : [1,2,3]
             }
         ]
