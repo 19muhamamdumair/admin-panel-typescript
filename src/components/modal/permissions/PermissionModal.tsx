@@ -1,30 +1,22 @@
 import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
-
-import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import SearchIcon from "@mui/icons-material/Search";
-import TextField, { TextFieldProps } from "@mui/material/TextField";
-import { alpha, styled } from "@mui/material/styles";
-import { OutlinedInputProps } from "@mui/material/OutlinedInput";
-import InputBase from "@mui/material/InputBase";
-
+import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import CloseIcon from "@mui/icons-material/Close";
-
+import Select from "@mui/material/Select";
+import SearchIcon from "@mui/icons-material/Search";
 import Checkbox from "@mui/material/Checkbox";
 import {
   Dialog,
   DialogActions,
   DialogTitle,
   Grid,
-  IconButton,
+  InputAdornment,
   Snackbar,
   Typography,
 } from "@mui/material";
@@ -34,46 +26,49 @@ import {
   group_permissions,
 } from "../../../data/Permission";
 import { makeStyles } from "@mui/styles";
-import { flexbox } from "@mui/system";
-import Permissions from "../../../pages/Permissions";
 
 const useStyles = makeStyles({
-  root: {
-    background: "green",
+  toasterColor: {
+    background: "#28a745",
   },
   flow: {
     overflowX: "hidden",
   },
+  inputlabel: {
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    width: "100%",
+    color: "red",
+  },
+
+  input: {
+    "&::placeholder": {
+      textOverflow: "ellipsis !important",
+      color: "blue",
+    },
+  },
 });
 const BasicModal = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [age, setAge] = React.useState("");
-  const [name, setName] = React.useState("");
+
   const [ischeckBoxChecked, setIscheckBoxChecked] = useState<boolean>(false);
   const [isSelectAllChecked, setIsSelectAllChecked] = useState<boolean>(false);
   const [permissionsInfo, setPermissionsInfo] = useState<any>(permission);
+  const [allPermissions, setAllPermissions] = useState<any>(permission);
   const [open, setOpen] = React.useState(false);
-  const [selectValue, setSelectValue] = React.useState("");
-  const [groupPermissionName,setGroupPermissionName]=React.useState("")
-const [flag,setFlag]=React.useState(0);
-const [filterPermissionIds,setFilterPermissionIds]=useState<any>([])
-const[allPermissionIds,setAllPermissionIds]=useState<any>({
-  id:null,
-  name:""
-})
+  const [searchTerm, setSearchTerm] = useState<any>("");
+  const [groupPermissionName, setGroupPermissionName] = useState<string>("");
+  const [flag, setFlag] = React.useState(0);
+  const [permissionType, setPermissionType] = useState<string>("");
+
+  const [groupFlag, setGroupFlag] = useState<boolean>(false);
+  const [typeFlag, setTypeFlag] = useState<boolean>(false);
   const classes = useStyles();
-  useEffect(()=>{
-    permissionsInfo.map((p:any)=>{
-      setAllPermissionIds({
-        id:p.id,
-        name:p.name
-      })
-    })
-    console.log(allPermissionIds)
-  },[])
+  const [groupData, setGroupData] = useState<any>([{}]);
+  const [typeData, setTypeData] = useState<any>([{}]);
   useEffect(() => {
-    if(flag)
-    {
+    if (flag) {
       setPermissionsInfo(
         permissionsInfo.map((permission: any) => ({
           ...permission,
@@ -81,44 +76,106 @@ const[allPermissionIds,setAllPermissionIds]=useState<any>({
         }))
       );
     }
-    setFlag(1)
+    setFlag(1);
   }, [isSelectAllChecked]);
-const handleSelectChange=(targetValue:any)=>{
-  console.log("target value",targetValue)
-  console.log("select value",selectValue)
-  setGroupPermissionName(targetValue)
-}
-const filterPermission=()=>{
-  console.log("filterPermission",group_permissions)
-  let initialarr:any
-  let newarr:any=[];
 
-  if(groupPermissionName!=="")
-  {
-    group_permissions.map((singleGroup)=>{
-      if(singleGroup.name===groupPermissionName)
-      {
-        singleGroup.permissions.map((singlePermission)=>{
-          // console.log(singlePermission.permission_id),
-          newarr.push(...filterPermissionIds,singlePermission.permission_id)
-        })
+  useEffect(() => {
+    if (groupPermissionName !== "" && groupPermissionName !== "none") {
+      setGroupFlag(true);
+      filterGroupPermission();
+    } else {
+      setGroupFlag(false);
+    }
+    if (permissionType !== "none" && groupPermissionName === "none") {
+      setPermissionsInfo(typeData);
+    }
+  }, [groupPermissionName]);
+
+  useEffect(() => {
+    if (permissionType !== "" && permissionType !== "none") {
+      setTypeFlag(true);
+      filterTypePermission();
+    } else {
+      setTypeFlag(false);
+    }
+    if (permissionType === "none" && groupPermissionName !== "none") {
+      setPermissionsInfo(groupData);
+    }
+  }, [permissionType]);
+  useEffect(() => {
+    if (
+      (permissionType === "none" && groupPermissionName === "none") ||
+      (permissionType === "" && groupPermissionName === "") ||
+      (permissionType === "none" && groupPermissionName === "") ||
+      (permissionType === "" && groupPermissionName === "none")
+    ) {
+      setPermissionsInfo(allPermissions);
+    }
+  }, [permissionType, groupPermissionName]);
+  const filterTypePermission = () => {
+    let filterId: any;
+    permissionTypes.find((type) => {
+      if (type.name === permissionType) {
+        filterId = type.id;
       }
-    })
-    setFilterPermissionIds(newarr)
-    // console.log(filterPermissionIds)
-    console.log(filterPermissionIds)
-  }
- 
-  // else
-  {
+    });
 
-  }
-}
-useEffect(()=>{
-  console.log(filterPermissionIds)
-},[])
+    let filterData = allPermissions.filter((permission: any) => {
+      return permission.permission_type_id === filterId;
+    });
+
+    setTypeData(filterData);
+
+    if (groupFlag) {
+      groupFlagFunction(groupData, filterData);
+    } else {
+      setPermissionsInfo(filterData);
+    }
+  };
+  const FilterPermission = (e: any) => {
+    setSearchTerm(e.target.value);
+  };
+  const groupFlagFunction = (filterPermissionIds: any, filterData: any) => {
+    let newData: any = [];
+
+    filterPermissionIds.map((permission: any) => {
+      let tempData = filterData.find(
+        (data: any) => permission.permission_id === data.permission_id
+      );
+      if (tempData) {
+        newData.push(tempData);
+      }
+    });
+    setPermissionsInfo(newData);
+  };
+  const filterGroupPermission = () => {
+    let newarr: any = [];
+    group_permissions.map((singleGroup) => {
+      if (singleGroup.name === groupPermissionName) {
+        newarr = singleGroup.permissions.map((f) => f.permission_id);
+      }
+    });
+
+    let filterData: any = [];
+    for (let i = 0; i < newarr.length; i++) {
+      let tempPermission = allPermissions.find(
+        (permission: any) => permission.permission_id === newarr[i]
+      );
+
+      if (tempPermission) {
+        filterData.push(tempPermission);
+      }
+    }
+
+    setGroupData(filterData);
+    if (typeFlag) {
+      groupFlagFunction(typeData, filterData);
+    } else {
+      setPermissionsInfo(filterData);
+    }
+  };
+
   const permissionSelection = (event: any, checked: boolean) => {
-    console.log(event, checked);
     permissionsInfo.map((permission: any, index: number) => {
       if (permission.id == event.target.value) {
         permissionsInfo[index].checked = !permission.checked;
@@ -145,21 +202,6 @@ useEffect(()=>{
     setOpen(false);
   };
 
-  const action = (
-    <React.Fragment>
-      <IconButton
-        size="small"
-        aria-label="close"
-        // color="inherit"
-        color="success"
-        // bgcolor="success"
-        onClick={closeToaster}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -167,87 +209,6 @@ useEffect(()=>{
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-
-  const BootstrapInput = styled(InputBase)(({ theme }) => ({
-    "label + &": {
-      marginTop: theme.spacing(0),
-    },
-    "& .MuiInputBase-input": {
-      borderRadius: 4,
-      position: "relative",
-      width: 370,
-      height: 12,
-      backgroundColor: theme.palette.mode === "light" ? "#fcfcfb" : "#2b2b2b",
-      border: "1px solid #ced4da",
-      fontSize: 16,
-      // width: 'auto',
-      padding: "10px 12px",
-      transition: theme.transitions.create([
-        "border-color",
-        "background-color",
-        "box-shadow",
-      ]),
-      // Use the system font instead of the default Roboto font.
-      fontFamily: [
-        "-apple-system",
-        "BlinkMacSystemFont",
-        '"Segoe UI"',
-        "Roboto",
-        '"Helvetica Neue"',
-        "Arial",
-        "sans-serif",
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-      ].join(","),
-      "&:focus": {
-        boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
-        borderColor: theme.palette.primary.main,
-      },
-    },
-  }));
-
-  const RedditTextField = styled((props: TextFieldProps) => (
-    <TextField
-      InputProps={{ disableUnderline: true } as Partial<OutlinedInputProps>}
-      {...props}
-    />
-  ))(({ theme }) => ({
-    "& .MuiFilledInput-root": {
-      border: "1px solid #e2e2e1",
-      overflow: "hidden",
-      borderRadius: 4,
-      backgroundColor: theme.palette.mode === "light" ? "#fcfcfb" : "#2b2b2b",
-      transition: theme.transitions.create([
-        "border-color",
-        "background-color",
-        "box-shadow",
-      ]),
-      "&:hover": {
-        backgroundColor: "transparent",
-      },
-      "&.Mui-focused": {
-        backgroundColor: "transparent",
-        boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
-        borderColor: theme.palette.primary.main,
-      },
-    },
-  }));
-
-  const ValidationTextField = styled(TextField)({
-    "& input:valid + fieldset": {
-      borderColor: "green",
-      borderWidth: 2,
-    },
-    "& input:invalid + fieldset": {
-      borderColor: "red",
-      borderWidth: 2,
-    },
-    "& input:valid:focus + fieldset": {
-      borderLeftWidth: 6,
-      padding: "4px !important", // override inline-style
-    },
-  });
 
   return (
     <>
@@ -273,8 +234,7 @@ useEffect(()=>{
         }}
       >
         <DialogTitle sx={{ borderBottom: "1px solid grey" }}>
-          {" "}
-          Permission Group Name
+          Permissions Group Name
         </DialogTitle>
         <Grid
           item
@@ -286,42 +246,64 @@ useEffect(()=>{
           xl={12}
           sx={{ marginLeft: "20px" }}
         >
-          <Grid item container direction={"column"} lg={12} xl={12}>
+          <Grid item direction={"column"} lg={12} xl={12}>
             <Grid item xs={6} md={6} lg={6} xl={6}>
               <Box sx={{ mt: 2, fontSize: 12, fontWeight: "bold" }}>
                 Permissions Group Name
               </Box>
             </Grid>
             <Grid item xs={3} sm={3} md={6} lg={6} xl={6}>
-              <FormControl
-                sx={{ width: { xl: 370, lg: 370, md: 370, sm: 370, xs: 220 } }}
-                variant="standard"
-              >
-                <InputLabel shrink htmlFor="bootstrap-input"></InputLabel>
-                <BootstrapInput
-                  placeholder="Permissions Group Name"
-                  id="bootstrap-input"
-                />
-              </FormControl>
+              <TextField
+                sx={{
+                  "& legend": { display: "none" },
+                  "& fieldset": { top: 0 },
+                  width: { xl: 370, lg: 370, md: 370, sm: 370, xs: 220 },
+                }}
+                // placeholder="Filter by Permission Group"
+                hiddenLabel
+                id="filled-hidden-label-small"
+                size="small"
+                onChange={FilterPermission}
+                // InputProps={{
+                //   startAdornment: (
+                //     <InputAdornment position="start">
+                //       <SearchIcon />
+                //     </InputAdornment>
+                //   ),
+                // }}
+              />
             </Grid>
           </Grid>
-          <Grid item container direction={"column"}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <Grid item xs={6} md={6} lg={6} xl={6}>
               <Box sx={{ mt: 2, fontSize: 12, fontWeight: "bold" }}>
-                Permissions Group Name
+                Filter Permissions
               </Box>
             </Grid>
+
             <Grid item xs={3} sm={3} md={6} lg={6} xl={6}>
-              <FormControl
-                sx={{ width: { xl: 370, lg: 370, md: 370, sm: 370, xs: 220 } }}
-                variant="standard"
-              >
-                <InputLabel shrink htmlFor="bootstrap-input"></InputLabel>
-                <BootstrapInput
-                  placeholder="Permissions Group Name"
-                  id="bootstrap-input"
+              <Box>
+                <TextField
+                  type={"search"}
+                  sx={{
+                    "& legend": { display: "none" },
+                    "& fieldset": { top: 0 },
+                    width: { xl: 370, lg: 370, md: 370, sm: 370, xs: 220 },
+                  }}
+                  placeholder=" Filter by Permission Name"
+                  hiddenLabel
+                  id="filled-hidden-label-small"
+                  size="small"
+                  onChange={FilterPermission}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </FormControl>
+              </Box>
             </Grid>
           </Grid>
           <Grid item container>
@@ -354,7 +336,7 @@ useEffect(()=>{
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={name}
+                      value={permissionType}
                       sx={{
                         width: {
                           xl: "100%",
@@ -365,10 +347,14 @@ useEffect(()=>{
                         },
                         height: 40,
                         mb: 1,
+                        fontSize: "9px",
                       }}
-                      label="Permission"
-                      onChange={(e) => setName(e.target.value)}
+                      label="Permission Type dsfs"
+                      onChange={(e) => setPermissionType(e.target.value)}
                     >
+                      <MenuItem value="none" key="0">
+                        None
+                      </MenuItem>
                       {permissionTypes.map((type) => (
                         <MenuItem value={type.name} key={type.id}>
                           {type.name}
@@ -394,7 +380,7 @@ useEffect(()=>{
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={selectValue}
+                      value={groupPermissionName}
                       sx={{
                         width: {
                           xl: "100%",
@@ -407,17 +393,20 @@ useEffect(()=>{
                         mb: 1,
                         p: 1,
                         color: "black",
+                        fontSize: "9px",
                       }}
-                      label="Existing Gr"
+                      label="Existing Groupsssss"
                       variant="outlined"
-                      // onChange={(e:any)=>handleSelectChange(e.target.value)}
-                      onChange={(e) =>{ 
-                        setGroupPermissionName(e.target.value)
-                        filterPermission()
-                      }}
+                      onChange={(e) => setGroupPermissionName(e.target.value)}
                     >
+                      <MenuItem value="none" key="0">
+                        None
+                      </MenuItem>
                       {group_permissions.map((singleGroup) => (
-                        <MenuItem key={singleGroup.name} value={singleGroup.name}>
+                        <MenuItem
+                          key={singleGroup.name}
+                          value={singleGroup.name}
+                        >
                           {singleGroup.name}
                         </MenuItem>
                       ))}
@@ -433,9 +422,11 @@ useEffect(()=>{
                     height: 40,
                     ml: { xs: 0, lg: 0, xl: 0, sm: 0, md: 0 },
                     mb: 3,
-                    fontSize: 9,
+                    fontSize: 12,
                     color: "black",
                     borderColor: "lightgrey",
+                    textTransform: "none",
+                    fontWeight: "bold",
                   }}
                 >
                   More Filters
@@ -509,33 +500,41 @@ useEffect(()=>{
                     <Checkbox
                       onChange={(e: any, checked: boolean) => {
                         setIsSelectAllChecked(checked);
-                        setFlag(1)
-                       
+                        setFlag(1);
                       }}
                     />
-                    Select All{" "}
+                    Select All
                   </Button>
                 </Grid>
               </Box>
               <Grid sx={{ mt: { lg: -4, xl: -4, md: -4, sm: -4 } }}>
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
-                  {groupPermissionName && groupPermissionName!==""&&
-                  permissionsInfo.map((data: any) => (
-                    // <div>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          onChange={permissionSelection}
-                          checked={data.checked}
-                          value={data.id}
-                        />
+                  {permissionsInfo
+                    .filter((val: any) => {
+                      if (searchTerm == "") {
+                        return val;
+                      } else if (
+                        val.label
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase())
+                      ) {
+                        return val;
                       }
-                      label={data.label}
-                    />
-                    // </div>
-                  ))
-                  }
-                  
+                    })
+                    .map((data: any) => (
+                      <div>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              onChange={permissionSelection}
+                              checked={data.checked}
+                              value={data.id}
+                            />
+                          }
+                          label={data.label}
+                        />
+                      </div>
+                    ))}
                 </Box>
               </Grid>
             </Grid>
@@ -579,10 +578,9 @@ useEffect(()=>{
           autoHideDuration={6000}
           onClose={closeToaster}
           message="Saved"
-          // action={action}
           ContentProps={{
             classes: {
-              root: classes.root,
+              root: classes.toasterColor,
             },
           }}
           sx={{
