@@ -49,7 +49,7 @@ const useStyles = makeStyles({
     },
   },
 });
-const BasicModal = () => {
+const PermissionModal = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [ischeckBoxChecked, setIscheckBoxChecked] = useState<boolean>(false);
@@ -264,13 +264,13 @@ const BasicModal = () => {
                 id="filled-hidden-label-small"
                 size="small"
                 onChange={FilterPermission}
-                // InputProps={{
-                //   startAdornment: (
-                //     <InputAdornment position="start">
-                //       <SearchIcon />
-                //     </InputAdornment>
-                //   ),
-                // }}
+              // InputProps={{
+              //   startAdornment: (
+              //     <InputAdornment position="start">
+              //       <SearchIcon />
+              //     </InputAdornment>
+              //   ),
+              // }}
               />
             </Grid>
           </Grid>
@@ -603,4 +603,4 @@ const BasicModal = () => {
   );
 };
 
-export default BasicModal;
+export default PermissionModal;
