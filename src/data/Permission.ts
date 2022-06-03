@@ -96,7 +96,7 @@ export const group_permissions = [
         checked: true,
         permissions : [
             {
-                checked: false,
+                checked: true,
                 id : 1,
                 sub_permissions : [1,2,3]
             }, {
@@ -119,7 +119,7 @@ export const group_permissions = [
                 sub_permissions : [1,2,3]
             }
             , {
-                checked: false,
+                checked: true,
                 id : 2,
                 sub_permissions : [1,2,3]
             }, {
@@ -137,7 +137,7 @@ export const group_permissions = [
         name : "Permissions Group 2",
         permissions : [
             {
-                checked: false,
+                checked: true,
 
                 id : 1,
                 sub_permissions : [1,2,3]

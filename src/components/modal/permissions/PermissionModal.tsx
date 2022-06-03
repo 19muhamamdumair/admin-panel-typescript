@@ -33,6 +33,7 @@ const useStyles = makeStyles({
   },
   flow: {
     overflowX: "hidden",
+   
   },
   inputlabel: {
     textOverflow: "ellipsis",
@@ -540,14 +541,16 @@ const PermissionModal = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item>
+        <Grid item >
+          <Paper >
           <DialogActions
             sx={{
               borderTop: "1px solid grey",
               marginTop: 8,
               boxShadow: 10,
-              overflow: "hidden",
+              overflowY:'hidden'
             }}
+           
           >
             <Button
               sx={{ border: "2px solid whitesmoke" }}
@@ -570,6 +573,7 @@ const PermissionModal = () => {
               Save
             </Button>
           </DialogActions>
+          </Paper>
         </Grid>
       </Dialog>
       <Paper>

@@ -4,12 +4,10 @@ import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import Box from "@mui/material/Box";
-import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-
-
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
 import {
   Dialog,
@@ -24,13 +22,15 @@ import {
   group_permissions,
 } from "../../../data/Permission";
 import { makeStyles } from "@mui/styles";
+import { DialogProps } from "@mui/material";
+import { DialogContent } from "@mui/material";
 
 const useStyles = makeStyles({
   toasterColor: {
     background: "#28a745",
   },
   label: {
-    fontSize: '3.2em'
+    fontSize: "3.2em",
   },
 
   flow: {
@@ -44,7 +44,6 @@ const useStyles = makeStyles({
     color: "red",
   },
 
-
   input: {
     "&::placeholder": {
       textOverflow: "ellipsis !important",
@@ -55,25 +54,44 @@ const useStyles = makeStyles({
 const RoleModal = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [open, setOpen] = React.useState(false);
-  const [checked, setChecked] = React.useState([true, false]);
+  const [checkedFlag, setCheckedFlag] = React.useState(false);
   const [isSelectAllChecked, setIsSelectAllChecked] = useState<boolean>(false);
   const [flag, setFlag] = React.useState(0);
-  const [groupPermission, setGroupPermission] = useState<any>(group_permissions);
-  const [allValue, setAllValue] = useState(false)
-  const [filterPermissions, setFilterPermissions] = useState<any>([{}])
-  const [childValue, setChildValue] = useState('')
-  const [isChecked,setIsChecked]=useState<any>(false)
+  const [groupPermission, setGroupPermission] =
+    useState<any>(group_permissions);
+  const [permissionInfo, setPermissionsInfo] = useState<any>(permission);
+ 
+  const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
 
 
-  const [permissionInfo, setPermissionsInfo] = useState<any>(permission)
-
-
-  const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked([event.target.checked, event.target.checked]);
+  const checkAllPermissions=(isChecked? : boolean)=>
+  {
+    groupPermission.map((singleGrouppermission:any)=>{
+      singleGrouppermission.checked=isChecked
+      singleGrouppermission.permissions.map((singlePermission:any)=>{
+        singlePermission.checked=isChecked
+      })
+    })
+    setGroupPermission(groupPermission)
+    setCheckedFlag(!checkedFlag);
+  }
+  const CheckParentAndChildPermission = (parentId: any,event? : any,isChecked? : boolean) => {
+    console.log(event,isChecked)
+    groupPermission.map((singleGrouppermission: any, index: number) => {
+      if (singleGrouppermission.id === parentId) {
+        singleGrouppermission.checked = isChecked;
+        singleGrouppermission.permissions.map((singlePermission: any, index: any) => {
+          singlePermission.checked = isChecked;
+        });
+      }
+    });
+    setGroupPermission(groupPermission);
+    // debugger;
+    setCheckedFlag(!checkedFlag);
   };
   useEffect(() => {
     // debugger;
-    console.log(groupPermission)
+    console.log(groupPermission);
     if (flag) {
       setPermissionsInfo(
         groupPermission.map((permission: any) => ({
@@ -85,73 +103,28 @@ const RoleModal = () => {
     setFlag(1);
   }, [isSelectAllChecked]);
 
- 
+  const CheckChildPermission = (groupId: any, permissionId: any, isChecked? : boolean) => {
+    
+    groupPermission.map((singleGroupPermission: any, index: number) => {
+      if (singleGroupPermission.id === groupId) {
+        var isAnyPermissionCheckedflag = false
+        singleGroupPermission.permissions.find((singlePermission: any, index: any) => {
+          if (singlePermission.id === permissionId) {
+            singlePermission.checked = isChecked;
+          }
+          if(singlePermission.checked) isAnyPermissionCheckedflag = true
 
- 
+        });
 
-  const children = (permissions: any) => {
-   return permission.map((p)=>{
-     {console.log(p)}
-      
-        (<Box sx={{ display: 'flex', flexDirection: 'column', ml: 3, mt: "-20px" }}>
-        <FormControlLabel
-        sx={{marginTop:'7px'}}
-          label={<Typography sx={{ fontSize: 12 }} color="black">{p.label}</Typography>}
-          control={<Checkbox size="small" value={permissions.checked} checked={permissions.checked} onChange={()=>roleChecked(permissions.id,p.id)} />}
-        />
-      </Box>)
-      
-    })
-   
-
-    // let newarr: any = [];
-    // // debugger
-    // permissions.map((singlePermission: any) => {
-    //   let temp = permissionInfo.find((p: any) => singlePermission.id === p.id)
-    //   if (temp) {
-    //     newarr.push(temp)
-
-    //   }
-
-    // })
-
-    // setFilterPermissions(newarr)
-    // debugger
-    // return filterPermissions.map((permission: any) => (
-    //   <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3, mt: "-20px" }}>
-    //     <FormControlLabel
-    //       label={<Typography sx={{ fontSize: 12 }} color="black">{permission.label}</Typography>}
-    //       control={<Checkbox size="small" checked={permission.checked} onChange={handleChange2} />}
-    //     />
-    //   </Box>
-    // ))
-  }
-  const setPermissionData=(newarr:any)=>{
-    setTimeout(()=>setFilterPermissions(newarr),1000)
-    // console.log(filterPermissions)
-  }
-const roleChecked=(groupId:any,permissionId:any)=>{
-  // debugger
-  groupPermission.map((permission: any, index: number) => {
-    if(permission.id===groupId)
-    {
-      permission.permissions.find((singlePermission:any,index:any)=>{
-        if(singlePermission.id===permissionId)
-        {
-          console.log(permissionId,singlePermission.checked)
-          singlePermission.checked= !permission.roleChecked
-          console.log(permissionId,singlePermission.checked)
-        }
-      })
-    }
-    // console.log(permission)
-  });
-  // setAllValue(event.target.value)
-
-}
-
+        singleGroupPermission.checked = isAnyPermissionCheckedflag || false
+      }
+    });
+    setGroupPermission(groupPermission);
+    setCheckedFlag(!checkedFlag);
+    
+  };
+  
   const classes = useStyles();
-
 
   const handleToaster = () => {
     setOpen(true);
@@ -169,8 +142,9 @@ const roleChecked=(groupId:any,permissionId:any)=>{
     setOpen(false);
   };
 
-  const showModal = () => {
+  const showModal = (scrollType: DialogProps['scroll']) => {
     setIsModalVisible(true);
+    setScroll(scrollType);
   };
 
   const handleCancel = () => {
@@ -187,7 +161,7 @@ const roleChecked=(groupId:any,permissionId:any)=>{
           textTransform: "none",
         }}
         variant="contained"
-        onClick={showModal}
+        onClick={()=>showModal('paper')}
       >
         Create User
       </Button>
@@ -199,10 +173,12 @@ const roleChecked=(groupId:any,permissionId:any)=>{
           classes: { root: classes.flow },
           sx: { position: "fixed", top: 0 },
         }}
+        scroll={scroll}
       >
         <DialogTitle sx={{ borderBottom: "1px solid grey" }}>
           User Role Name
         </DialogTitle>
+        <DialogContent dividers={scroll === 'paper'} sx={{overflowX:'hidden'}}>
         <Grid
           item
           container
@@ -236,23 +212,18 @@ const roleChecked=(groupId:any,permissionId:any)=>{
 
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Box sx={{ mt: 2, fontSize: 16 }}>
-              </Box>
+              <Box sx={{ mt: 2, fontSize: 16 }}></Box>
             </Grid>
           </Grid>
 
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={8} md={8} xl={8} >
-              <Box sx={{ fontSize: 15 }}>
-                Edit Permissions
-              </Box>
+            <Grid item xs={12} sm={8} md={8} xl={8}>
+              <Box sx={{ fontSize: 15 }}>Edit Permissions</Box>
               <Box sx={{ fontSize: 12, mt: 1, fontWeight: "bold" }}>
                 PERMISSION GROUP (click to expand & edit individual permissions)
-
               </Box>
             </Grid>
             <Grid item xs={12} sm={4} md={3} xl={4}>
-
               <Button
                 variant="outlined"
                 sx={{
@@ -267,16 +238,14 @@ const roleChecked=(groupId:any,permissionId:any)=>{
                 }}
               >
                 <Checkbox
-                  onChange={(e: any, checked: boolean) => {
-                    setIsSelectAllChecked(checked);
-                    setFlag(1);
+                  onChange={(e: any, isChecked: boolean) => {
+                   checkAllPermissions(isChecked)
                   }}
                 />
                 Select All
               </Button>
             </Grid>
           </Grid>
-
 
           <Grid item container>
             <Box
@@ -291,56 +260,86 @@ const roleChecked=(groupId:any,permissionId:any)=>{
                 },
                 mt: 4,
               }}
-            >
-            </Box>
+            ></Box>
           </Grid>
-
-
         </Grid>
-        <Container>
-
+        <Container sx={{borderBottom:'4em'}}>
           <Grid container spacing={2}>
-            {groupPermission.map((data:any) => (
+            {groupPermission.map((data: any) => (
               <Grid item xs={12} sm={6} md={6} lg={6}>
                 <FormControlLabel
                   classes={{ label: classes.label }}
-
                   sx={{ fontSize: "4px", mt: -4 }}
                   label={data.name}
                   control={
                     <Checkbox
                       size="small"
-
                       // indeterminate={checked[0] !== checked[1]}
-                      onChange={handleChange1}
+                      value={data.checked}
+                      checked={data.checked}
+                      onChange={(event,isChecked) => CheckParentAndChildPermission(data.id,event,isChecked)}
                     />
                   }
                 />
 
+                {/* {children(data.permissions)} */}
 
-
-
-                {children(data.permissions)}
-              
-                {
-      
-                 data.permissions.map((p: any) => {
-                  children(p)
-                   
-                  })
-                }
+                {data.permissions.map((p: any) => {
+                  return permissionInfo.map((sp: any) => {
+                    if (p.id === sp.id) {
+                      return (
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            ml: 3,
+                            mt: "-20px",
+                          }}
+                        >
+                          <FormControlLabel
+                            sx={{ marginTop: "7px" }}
+                            label={
+                              <Typography sx={{ fontSize: 12 }} color="black">
+                                {sp.label}
+                              </Typography>
+                            }
+                            control={
+                              <Checkbox
+                                size="small"
+                                value={p.checked}
+                                checked={p.checked}
+                                onChange={(event:any,isChecked:boolean) =>
+                                  CheckChildPermission(data.id, p.id,isChecked)
+                                }
+                              />
+                            }
+                          />
+                        </Box>
+                      );
+                    }
+                  });
+                })}
               </Grid>
             ))}
-
           </Grid>
         </Container>
-        <Grid item>
+      
+        <Box   sx={{
+              // borderTop: "1px solid grey",
+              marginTop: 8,
+              // boxShadow: 10,
+            
+            }}>
+
+        </Box>
+        </DialogContent>
+        <Grid >
           <DialogActions
             sx={{
               borderTop: "1px solid grey",
-              marginTop: 8,
+              // marginTop: 8,
               boxShadow: 10,
-              overflow: "hidden",
+            
             }}
           >
             <Button
@@ -395,7 +394,6 @@ const roleChecked=(groupId:any,permissionId:any)=>{
       </Paper>
     </>
   );
-}
-
+};
 
 export default RoleModal;
