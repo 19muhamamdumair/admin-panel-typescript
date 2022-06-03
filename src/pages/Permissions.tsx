@@ -2,7 +2,7 @@ import React, { ReactElement, FC } from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import PermissionsTable from "../components/Permissions/PermissionsTable";
-import BasicModal from "../components/modal/permissions/PermissionModal"
+import PermissionModal from "../components/modal/permissions/PermissionModal"
 import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
 
 const Permissions: FC<any> = (): ReactElement => {
@@ -19,7 +19,7 @@ const Permissions: FC<any> = (): ReactElement => {
           <Grid item xs={12} md={6} lg={6} xl={6} >
             <Box display="flex" justifyContent="flex-end" sx={{justifyContent:{xs:'center',xl:'flex-end',md:'flex-end',lg:'flex-end'}}}>
           
-          <BasicModal />
+          <PermissionModal />
             </Box>
           </Grid>
         </Grid>

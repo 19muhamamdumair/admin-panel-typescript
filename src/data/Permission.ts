@@ -93,76 +93,99 @@ export const group_permissions = [
     {
         id : 1,
         name : "Admin Permissions",
+        checked: true,
         permissions : [
             {
-                permission_id : 1,
+                checked: true,
+                id : 1,
                 sub_permissions : [1,2,3]
             }, {
-                permission_id : 2,
+                checked: false,
+                id : 2,
                 sub_permissions : [1,2,3]
             }
         ]
     },
     {
         id : 2,
+        checked: true,
+
         name : "Permissions Group 1",
         permissions : [
             {
-                permission_id : 1,
+                checked: false,
+
+                id : 1,
                 sub_permissions : [1,2,3]
             }
             , {
-                permission_id : 2,
+                checked: true,
+                id : 2,
                 sub_permissions : [1,2,3]
             }, {
-                permission_id : 3,
+                checked: false,
+
+                id : 3,
                 sub_permissions : [1,2,3]
             }
         ]
     },
     {
         id : 3,
+        checked: true,
+
         name : "Permissions Group 2",
         permissions : [
             {
-                permission_id : 1,
+                checked: true,
+
+                id : 1,
                 sub_permissions : [1,2,3]
             }
         ]
     },
     {
         id : 4,
+        checked: false,
         name : "Permissions Group 3",
         permissions : [
             {
-                permission_id : 4,
+                checked: false,
+                id : 4,
                 sub_permissions : [1,2,3]
             },
             {
-                permission_id : 5,
+                checked: false,
+                id : 5,
                 sub_permissions : [1,2,3]
             }, {
-                permission_id : 3,
+                checked: false,
+                id : 3,
                 sub_permissions : [1,2,3]
             }
         ]
     },
     {
         id : 5,
+        checked: false,
         name : "Permissions Group 4",
         permissions : [
             {
-                permission_id : 8,
+                checked: false,
+                id : 8,
                 sub_permissions : [1,2,3]
             },  {
-                permission_id : 7,
+                checked: false,
+                id : 7,
                 sub_permissions : [1,2,3]
             },
             {
-                permission_id : 2,
+                checked: false,
+                id : 2,
                 sub_permissions : [1,2,3]
             }, {
-                permission_id : 6,
+                checked: false,
+                id : 6,
                 sub_permissions : [1,2,3]
             }
         ]

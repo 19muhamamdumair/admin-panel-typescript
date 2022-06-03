@@ -33,6 +33,7 @@ const useStyles = makeStyles({
   },
   flow: {
     overflowX: "hidden",
+   
   },
   inputlabel: {
     textOverflow: "ellipsis",
@@ -49,7 +50,7 @@ const useStyles = makeStyles({
     },
   },
 });
-const BasicModal = () => {
+const PermissionModal = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [ischeckBoxChecked, setIscheckBoxChecked] = useState<boolean>(false);
@@ -152,7 +153,7 @@ const BasicModal = () => {
     let newarr: any = [];
     group_permissions.map((singleGroup) => {
       if (singleGroup.name === groupPermissionName) {
-        newarr = singleGroup.permissions.map((f) => f.permission_id);
+        newarr = singleGroup.permissions.map((f) => f.id);
       }
     });
 
@@ -264,13 +265,13 @@ const BasicModal = () => {
                 id="filled-hidden-label-small"
                 size="small"
                 onChange={FilterPermission}
-                // InputProps={{
-                //   startAdornment: (
-                //     <InputAdornment position="start">
-                //       <SearchIcon />
-                //     </InputAdornment>
-                //   ),
-                // }}
+              // InputProps={{
+              //   startAdornment: (
+              //     <InputAdornment position="start">
+              //       <SearchIcon />
+              //     </InputAdornment>
+              //   ),
+              // }}
               />
             </Grid>
           </Grid>
@@ -540,14 +541,16 @@ const BasicModal = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item>
+        <Grid item >
+          <Paper >
           <DialogActions
             sx={{
               borderTop: "1px solid grey",
               marginTop: 8,
               boxShadow: 10,
-              overflow: "hidden",
+              overflowY:'hidden'
             }}
+           
           >
             <Button
               sx={{ border: "2px solid whitesmoke" }}
@@ -570,6 +573,7 @@ const BasicModal = () => {
               Save
             </Button>
           </DialogActions>
+          </Paper>
         </Grid>
       </Dialog>
       <Paper>
@@ -603,4 +607,4 @@ const BasicModal = () => {
   );
 };
 
-export default BasicModal;
+export default PermissionModal;

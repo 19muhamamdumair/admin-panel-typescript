@@ -7,7 +7,8 @@ import getLocalStorageServices from "../services/local-storage.service"
 import { useState } from 'react';
 import { useEffect } from 'react';
 import IUser from "../types/user.type";
-export default function BasicMenu() {
+
+export default function AvatarMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [user, setUser] = useState<IUser>();
