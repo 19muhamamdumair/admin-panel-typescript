@@ -152,7 +152,7 @@ const PermissionModal = () => {
     let newarr: any = [];
     group_permissions.map((singleGroup) => {
       if (singleGroup.name === groupPermissionName) {
-        newarr = singleGroup.permissions.map((f) => f.permission_id);
+        newarr = singleGroup.permissions.map((f) => f.id);
       }
     });
 
