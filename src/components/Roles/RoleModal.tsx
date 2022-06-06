@@ -20,7 +20,7 @@ import {
   permission,
   permissionTypes,
   group_permissions,
-} from "../../../data/Permission";
+} from "../../data/Permission";
 import { makeStyles } from "@mui/styles";
 import { DialogProps } from "@mui/material";
 import { DialogContent } from "@mui/material";

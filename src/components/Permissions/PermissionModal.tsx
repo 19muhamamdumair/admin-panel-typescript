@@ -24,7 +24,7 @@ import {
   permission,
   permissionTypes,
   group_permissions,
-} from "../../../data/Permission";
+} from "../../data/Permission";
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({

@@ -9,9 +9,9 @@ import { routes as appRoutes } from "./routes";
 import "./index.css"
 import AuthService from "./services/auth.service";
 import IUser from './types/user.type';
-import ResponsiveDrawer from "./components/Drawer"
+import ResponsiveDrawer from "./components/Sidebar/Drawer"
 import { Box } from "@mui/system";
-import Navbar from './components/Navbar'
+import Navbar from './components/Header/Navbar'
 type Props = {};
 type State = {
   currentUser: IUser | undefined

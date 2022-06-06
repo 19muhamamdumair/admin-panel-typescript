@@ -2,8 +2,8 @@ import React, { ReactElement, FC } from "react";
 // import StickyHeadTable from "../components/RoleTable"
 import { Box, Button, Grid, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import RoleModal from "../components/modal/Role/RoleModal"
-import RoleTable from "../components/modal/Role/RoleTable";
+import RoleModal from "../components/Roles/RoleModal"
+import RoleTable from "../components/Roles/RoleTable";
 
 
 
