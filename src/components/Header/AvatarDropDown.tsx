@@ -3,10 +3,10 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Avatar, Typography } from '@mui/material';
-import getLocalStorageServices from "../services/local-storage.service"
+import getLocalStorageServices from "../../services/local-storage.service"
 import { useState } from 'react';
 import { useEffect } from 'react';
-import IUser from "../types/user.type";
+import IUser from "../../types/user.type";
 
 export default function AvatarMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

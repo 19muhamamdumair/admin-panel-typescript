@@ -2,7 +2,7 @@ import React, { ReactElement, FC } from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import PermissionsTable from "../components/Permissions/PermissionsTable";
-import PermissionModal from "../components/modal/permissions/PermissionModal"
+import PermissionModal from "../components/Permissions/PermissionModal"
 import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
 
 const Permissions: FC<any> = (): ReactElement => {
