@@ -59,31 +59,46 @@ export const group_Role = [
 export const user = [
     {
         id : 1,
+        firstname:"Umair",
+        lastname:"Ali",
+        status:"active",
         name : "user 1",
         roles : [1,2,3]
     },
     {
         id : 2,
+        firstname:"Kane",
+        lastname:"William",
+        status:"active",
         name : "user 2",
-        roles : [1,4,9]
+        roles : [1,4]
 
     },
     {
         id : 3,
+        firstname:"John",
+        lastname:"Doe",
+        status:"suspended",
         name : "user 3",
         roles : [1]
 
     },
     {
         id : 4,
+        firstname:"Irtaza",
+        lastname:"Hammad",
+        status:"pending",
         name : "user 4",
-        roles : [1, 5]
+        roles : [1, 4]
 
     },
     {
         id : 5,
+        firstname:"Ali",
+        lastname:"Hassan",
+        status:"pending",
         name : "user 5",
-        roles : [1, 5, 6]
+        roles : [2,3]
 
     }
 ]
