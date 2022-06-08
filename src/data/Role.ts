@@ -100,5 +100,48 @@ export const user = [
         name : "user 5",
         roles : [2,3]
 
+    },{
+        id : 6,
+        firstname:"Awais",
+        lastname:"A",
+        status:"active",
+        name : "user 6",
+        roles : [1,2,3]
+    },
+    {
+        id : 7,
+        firstname:"Jack",
+        lastname:"Jones",
+        status:"active",
+        name : "user 7",
+        roles : [1,4]
+
+    },
+    {
+        id : 8,
+        firstname:"Dj",
+        lastname:"Bravo",
+        status:"suspended",
+        name : "user 3",
+        roles : [1]
+
+    },
+    {
+        id : 9,
+        firstname:"Jon",
+        lastname:"Snow",
+        status:"pending",
+        name : "user 4",
+        roles : [1, 4]
+
+    },
+    {
+        id : 10,
+        firstname:"Lagertha",
+        lastname:"Brok",
+        status:"pending",
+        name : "user 5",
+        roles : [2,3]
+
     }
 ]

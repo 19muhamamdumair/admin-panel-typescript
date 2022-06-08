@@ -10,7 +10,16 @@ import { group_permissions } from "../../data/Permission";
 import UserNavbar from "./UserNavbar";
 import SearchBar from "material-ui-search-bar";
 import { useState } from "react";
-import { Avatar, Grid, InputAdornment, TextField } from "@mui/material";
+import {
+  Avatar,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import StatusDropdown from "./UserStatusDropdown";
 import RoleDropdown from "./RoleDropdown";
@@ -20,69 +29,64 @@ import { useEffect } from "react";
 import { Box } from "@mui/system";
 import { makeStyles } from "@mui/styles";
 import { group_Role } from "../../data/Role";
-
-export default function UsersTable() {
+import { useMemo } from "react";
+const UsersTable = React.memo(() => {
   const [userData, setUserData] = useState<any>(user);
   const [roles, setRoles] = useState<any>(group_Role);
-  const [flag, setFlag] = useState<any>(0);
-  const [r, setR] = useState<any>([{}]);
   const [c, setC] = useState<any>([{}]);
-  const [groupData, setGroupData] = useState<any>([{}]);
-  
-  let rows: any = [];
-  
- const setRowData:any=()=>{
-  //  if(flag===1)
-   {
-    roles.map((role: any) => {
-      userData.map((user: any) => {
-        user.roles.find((f: any) => {
-          if (f === role.id) {
-            rows = [
-              ...rows,
-              {
-                id: user.id,
-                avatar: "/broken-image.jpg",
-                fullname: user?.firstname + " " + user?.lastname,
-                status: user.status,
-                role: role.name,
-                firstName: user?.firstname,
-                lastName: user?.lastname,
-              },
-            ];
-          }
-        });
+  const [rows, setRows] = useState<any>([]);
+  const [navName, setNavName] = React.useState("all");
+  const [checkBoxSelection,setCheckBoxSelection]=useState<boolean>(false)
+ 
+
+  useEffect(() => {
+    let rows: any = [];
+
+    userData.map((user: any) => {
+      let userRole = "";
+      user.roles.find((f: any) => {
+        userRole += roles
+          .filter((singleRoleObject: any) => singleRoleObject.id === f)
+          .map((selectedRole: any) => selectedRole.name);
       });
+      if (navName === "all") {
+        rows.push({
+          id: user.id,
+          avatar: "/broken-image.jpg",
+          fullname: user?.firstname + " " + user?.lastname,
+          status: user.status,
+          role: userRole,
+          firstName: user?.firstname,
+          lastName: user?.lastname,
+        });
+      } else {
+        // console.log(navName, user.status);
+        if (navName === user.status) {
+          rows.push({
+            id: user.id,
+            avatar: "/broken-image.jpg",
+            fullname: user?.firstname + " " + user?.lastname,
+            status: user.status,
+            role: userRole,
+            firstName: user?.firstname,
+            lastName: user?.lastname,
+          });
+        }
+      }
     });
-  
-   }
-    return rows
- }
 
+    setRows(rows);
+  }, [navName]);
 
-  //   userData.map((user: any) => {
-  //     rows = [...rows,
-  //       {
-  //         id: user.id,
-  //         avatar: "/broken-image.jpg",
-  //         fullname: user?.firstname + " " + user?.lastname,
-  //         status: user.status,
-  //         role: "Admin",
-  //         firstName: user?.firstname,
-  //         lastName: user?.lastname,
-  //       },
-  //     ];
-  //     // console.log(rows)
-  //   });
   const requestSearch = () => {
     // const filteredRows = originalRows.filter((row) => {
     //   return row.name.toLowerCase().includes(searchedVal.toLowerCase());
     // });
     // setRows(filteredRows);
   };
-  
-  let columns: GridColDef[]=[] 
-  const setColumnsData:any=()=>{
+
+  let columns: GridColDef[] = [];
+  const setColumnsData: any = () => {
     // setFlag(1)
     columns = [
       {
@@ -125,32 +129,18 @@ export default function UsersTable() {
         flex: 0,
       },
     ];
-   return columns
-  }
-  let rdata:any=r
+    return columns;
+  };
+
   useEffect(() => {
-    let cdata=setColumnsData()
-    setC(cdata)
-    rdata=setRowData()
-    setR(rdata)
-    console.log("data",cdata)
-    console.log("data",rdata)
-    console.log("r",r)
-  console.log(setColumnsData())
-  console.log(setRowData())
-  setFlag(1)
-  console.log(flag)
+    let cdata = setColumnsData();
+    setC(cdata);
   }, []);
-  useEffect(()=>{
-    setFlag(2)
-  },[])
 
   return (
     <>
-   
       <Grid sx={{ width: "100%" }} container item component={Paper}>
-       
-        <UserNavbar />
+        <UserNavbar setNavName={setNavName} />
 
         <TextField
           type={"search"}
@@ -176,7 +166,9 @@ export default function UsersTable() {
         />
         <StatusDropdown />
         <RoleDropdown />
-    
+        <FormGroup sx={{ml:2,mb:-2}}>
+            <FormControlLabel control={<Checkbox onChange={()=>setCheckBoxSelection(!checkBoxSelection)}/>} label={<Typography sx={{fontWeight:'bold',color:'grey',fontSize:'12px'}}>Showing 50 users</Typography>} />
+          </FormGroup>
         <Grid
           sx={{
             height: 400,
@@ -186,16 +178,17 @@ export default function UsersTable() {
           }}
           container
         >
-     
-          <DataGrid
-            rows={setRowData()}
-            columns={c}
          
-            pageSize={10}
-            rowsPerPageOptions={[10]}
+          <DataGrid
+            rows={rows}
+            columns={c}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
             getRowClassName={() => "paxton-table--row"}
             checkboxSelection
-        
+          
+           
+            
             headerHeight={0}
             sx={{
               "& .css-f3jnds-MuiDataGrid-columnHeaders": { mt: "-17px" },
@@ -203,10 +196,9 @@ export default function UsersTable() {
               width: "100%",
             }}
           />
-
-         
         </Grid>
       </Grid>
     </>
   );
-}
+});
+export default UsersTable;

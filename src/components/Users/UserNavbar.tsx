@@ -6,19 +6,26 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { makeStyles } from '@mui/material';
-
-export default function UserNavbar() {
-  const [value, setValue] = React.useState('recents');
-
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
+interface Props{
+  setNavName:any
+}
+export default function UserNavbar(props:Props) {
+  const [navValue, setNavValue] = React.useState('all');
+// console.log(value)
+  // const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  //   setValue(newValue);
+  // };
 
   return (
-    <BottomNavigation sx={{ width: "100%",justifyContent:"flex-start",maxHeight:'45px',borderBottom:'2px solid whitesmoke'}} showLabels={true} value={value} onChange={handleChange}>
+    <BottomNavigation sx={{ width: "100%",justifyContent:"flex-start",maxHeight:'45px',borderBottom:'2px solid whitesmoke'}} showLabels={true} value={navValue}  
+    onChange={(event, newValue) => {
+      setNavValue(newValue)
+      props.setNavName(newValue);
+    }}>
       <BottomNavigationAction
         label="All"
-        value="All"
+        value="all"
+        
         sx={{maxWidth:'82px',
         "&.Mui-selected": {
             // backgroundColor:'blue',
@@ -31,7 +38,7 @@ export default function UserNavbar() {
       />
       <BottomNavigationAction
         label="Active"
-        value="Active"
+        value="active"
         sx={{maxWidth:'82px',  "&.Mui-selected": {
             // backgroundColor:'blue',
             borderBottom:'2px solid green',
@@ -40,7 +47,7 @@ export default function UserNavbar() {
       />
       <BottomNavigationAction
         label="Suspended"
-        value="Suspended"
+        value="suspended"
         sx={{maxWidth:'82px',  "&.Mui-selected": {
             // backgroundColor:'blue',
             borderBottom:'2px solid green',
@@ -49,7 +56,7 @@ export default function UserNavbar() {
       />
        <BottomNavigationAction
         label="Pending"
-        value="Pending"
+        value="pending"
         sx={{maxWidth:'82px',  "&.Mui-selected": {
             // backgroundColor:'blue',
             borderBottom:'2px solid green',
