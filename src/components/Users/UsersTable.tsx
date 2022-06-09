@@ -10,13 +10,21 @@ import { group_permissions } from "../../data/Permission";
 import UserNavbar from "./UserNavbar";
 import SearchBar from "material-ui-search-bar";
 import { useState } from "react";
+import sort from "../../assets/Images/sort.png";
 import {
   Avatar,
   Checkbox,
+  FormControl,
   FormControlLabel,
   FormGroup,
+  FormHelperText,
   Grid,
+  Input,
   InputAdornment,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -29,18 +37,63 @@ import { useEffect } from "react";
 import { Box } from "@mui/system";
 import { makeStyles } from "@mui/styles";
 import { group_Role } from "../../data/Role";
+import Person from "@material-ui/icons/Person";
 import { useMemo } from "react";
+
+const useStyles = makeStyles({
+  hideRightSeparator: {
+    // '& .MuiDataGrid-columnHeaderTitle': {
+    //     visibility: 'hidden',
+    // },
+    // '&.MuiDataGrid-root .MuiDataGrid-iconSeparator':{
+    //   visibility: 'hidden',
+    // }
+  },
+  giveItemMargin: {
+    "&.MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input":
+      {
+        marginLeft: "52px",
+      },
+  },
+});
 const UsersTable = React.memo(() => {
   const [userData, setUserData] = useState<any>(user);
   const [roles, setRoles] = useState<any>(group_Role);
   const [c, setC] = useState<any>([{}]);
   const [rows, setRows] = useState<any>([]);
   const [navName, setNavName] = React.useState("all");
-  const [checkBoxSelection,setCheckBoxSelection]=useState<boolean>(false)
- 
+  const [checkBoxSelection, setCheckBoxSelection] = useState<boolean>(false);
+  const [sortValue, setSortValue] = useState<any>("");
+
+  const classes = useStyles();
 
   useEffect(() => {
     let rows: any = [];
+    if(sortValue==="First name A-Z")
+    {
+      let tempArr=userData.sort((a:any, b:any) => a.firstname.localeCompare(b.firstname))
+      setUserData(tempArr)
+    }
+    else if (sortValue==="First name Z-A")
+    {
+      let tempArr=userData.sort((a:any, b:any) => b.firstname.localeCompare(a.firstName))
+      setUserData(tempArr)
+    } 
+    else if (sortValue==="Last name A-Z")
+    {
+      let tempArr=userData.sort((a:any, b:any) => a.lastname.localeCompare(b.lastname))
+      setUserData(tempArr)
+    }
+    else if (sortValue==="Last name Z-A")
+    {
+      let tempArr=userData.sort((a:any, b:any) => b.lastname.localeCompare(a.lastname))
+      setUserData(tempArr)
+    }
+    else if(sortValue==="Status")
+    {
+      let tempArr=userData.sort((a:any, b:any) => a.status.localeCompare(b.status))
+      setUserData(tempArr)
+    }
 
     userData.map((user: any) => {
       let userRole = "";
@@ -53,7 +106,7 @@ const UsersTable = React.memo(() => {
         rows.push({
           id: user.id,
           avatar: "/broken-image.jpg",
-          fullname: user?.firstname + " " + user?.lastname,
+          fullname: {fullname:user?.firstname + " " + user?.lastname,email:user.email},
           status: user.status,
           role: userRole,
           firstName: user?.firstname,
@@ -65,7 +118,7 @@ const UsersTable = React.memo(() => {
           rows.push({
             id: user.id,
             avatar: "/broken-image.jpg",
-            fullname: user?.firstname + " " + user?.lastname,
+            fullname: {fullname:user?.firstname + " " + user?.lastname,email:user.email},
             status: user.status,
             role: userRole,
             firstName: user?.firstname,
@@ -76,7 +129,19 @@ const UsersTable = React.memo(() => {
     });
 
     setRows(rows);
-  }, [navName]);
+    // debugger
+
+  }, [navName,sortValue]);
+  useEffect(()=>{
+    // debugger
+console.log(sortValue)
+// debugger
+if(sortValue==="First name")
+{
+
+}
+console.log(rows)
+  },[sortValue,navName])
 
   const requestSearch = () => {
     // const filteredRows = originalRows.filter((row) => {
@@ -103,14 +168,22 @@ const UsersTable = React.memo(() => {
           );
         },
       },
-      { field: "fullname", flex: 1 },
+      { field: "fullname", flex: 1,
+      renderCell: (params) => (
+        <div>
+          <Typography>{params.row.fullname.fullname}</Typography>
+          <Typography color="textSecondary" fontSize={"12px"} fontStyle={"italic"}>{params.row.fullname.email}</Typography>
+        </div>
+      )
+    },
       {
         field: "status",
         flex: 1,
         renderCell: (params) => {
+          // debugger
           return (
             <>
-              <Box
+               <Box
                 sx={{
                   border: "1px solid #c2eab6",
                   backgroundColor: "#c2eab6",
@@ -119,7 +192,8 @@ const UsersTable = React.memo(() => {
                 }}
               >
                 {params.row.status}
-              </Box>
+              </ Box>
+              
             </>
           );
         },
@@ -165,10 +239,67 @@ const UsersTable = React.memo(() => {
           }}
         />
         <StatusDropdown />
+
         <RoleDropdown />
-        <FormGroup sx={{ml:2,mb:-2}}>
+        <Grid item container justifyContent={"end"}>
+          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+            <Select
+              value={sortValue}
+              onChange={(e) => setSortValue(e.target.value)}
+              displayEmpty
+              inputProps={{
+                "aria-label": "Without label",
+                style: { position: "absolute" },
+              }}
+              IconComponent={() => {
+                return (
+                  <>
+                    <Typography
+                      sx={{
+                        marginRight: "48px",
+                        position: "absolute",
+                        marginLeft: 1,
+                        fontSize: "12px",
+                        color: "#848383",
+                      }}
+                    >
+                      Sort by
+                    </Typography>
+                    <Box
+                      component="img"
+                      src={sort}
+                      sx={{ wdith: "10px", height: "10px", mr: "10px" }}
+                    />
+                  </>
+                );
+              }}
+              SelectDisplayProps={{
+                style: {
+                  marginLeft: "37px",
+                  paddingRight: "7px",
+                  fontSize: "12px",
+                },
+              }}
+            >
+              <MenuItem sx={{ display: "none" }} value="">
+                Last name A-Z
+              </MenuItem>
+              
+              <MenuItem value="Last name A-Z">Last name A-Z</MenuItem>
+              <MenuItem  value="Last name Z-A">
+                Last name Z-A
+              </MenuItem>
+              <MenuItem value={"First name A-Z"}>First name A-Z</MenuItem>
+              <MenuItem value={"First name Z-A"}>First name Z-A</MenuItem>
+              <MenuItem value={"Status"}>Status</MenuItem>
+             
+            </Select>
+          </FormControl>
+        </Grid>
+        {/* <Typography sx={{fontWeight:'bold',color:'grey',fontSize:'12px',position:'absolute',top:"26em",left:'28em'}}>Showing 50 users</Typography> */}
+        {/* <FormGroup sx={{ml:2,mb:-2}}>
             <FormControlLabel control={<Checkbox onChange={()=>setCheckBoxSelection(!checkBoxSelection)}/>} label={<Typography sx={{fontWeight:'bold',color:'grey',fontSize:'12px'}}>Showing 50 users</Typography>} />
-          </FormGroup>
+          </FormGroup> */}
         <Grid
           sx={{
             height: 400,
@@ -178,7 +309,6 @@ const UsersTable = React.memo(() => {
           }}
           container
         >
-         
           <DataGrid
             rows={rows}
             columns={c}
@@ -186,12 +316,13 @@ const UsersTable = React.memo(() => {
             rowsPerPageOptions={[5]}
             getRowClassName={() => "paxton-table--row"}
             checkboxSelection
-          
-           
-            
-            headerHeight={0}
+            className={classes.hideRightSeparator}
+            // headerHeight={0}
             sx={{
-              "& .css-f3jnds-MuiDataGrid-columnHeaders": { mt: "-17px" },
+              "& .css-f3jnds-MuiDataGrid-columnHeaders": {
+                position: "absolute",
+                top: -2,
+              },
               justifyContent: "center",
               width: "100%",
             }}

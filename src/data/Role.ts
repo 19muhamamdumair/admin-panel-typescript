@@ -61,6 +61,7 @@ export const user = [
         id : 1,
         firstname:"Umair",
         lastname:"Ali",
+        email:"temp@gmail.com",
         status:"active",
         name : "user 1",
         roles : [1,2,3]
@@ -69,6 +70,7 @@ export const user = [
         id : 2,
         firstname:"Kane",
         lastname:"William",
+        email:"temp@gmail.com",
         status:"active",
         name : "user 2",
         roles : [1,4]
@@ -78,6 +80,7 @@ export const user = [
         id : 3,
         firstname:"John",
         lastname:"Doe",
+        email:"temp@gmail.com",
         status:"suspended",
         name : "user 3",
         roles : [1]
@@ -87,6 +90,7 @@ export const user = [
         id : 4,
         firstname:"Irtaza",
         lastname:"Hammad",
+        email:"temp@gmail.com",
         status:"pending",
         name : "user 4",
         roles : [1, 4]
@@ -96,6 +100,7 @@ export const user = [
         id : 5,
         firstname:"Ali",
         lastname:"Hassan",
+        email:"temp@gmail.com",
         status:"pending",
         name : "user 5",
         roles : [2,3]
@@ -104,6 +109,7 @@ export const user = [
         id : 6,
         firstname:"Awais",
         lastname:"A",
+        email:"temp@gmail.com",
         status:"active",
         name : "user 6",
         roles : [1,2,3]
@@ -112,6 +118,7 @@ export const user = [
         id : 7,
         firstname:"Jack",
         lastname:"Jones",
+        email:"temp@gmail.com",
         status:"active",
         name : "user 7",
         roles : [1,4]
@@ -121,6 +128,7 @@ export const user = [
         id : 8,
         firstname:"Dj",
         lastname:"Bravo",
+        email:"temp@gmail.com",
         status:"suspended",
         name : "user 3",
         roles : [1]
@@ -130,6 +138,7 @@ export const user = [
         id : 9,
         firstname:"Jon",
         lastname:"Snow",
+        email:"temp@gmail.com",
         status:"pending",
         name : "user 4",
         roles : [1, 4]
@@ -139,6 +148,7 @@ export const user = [
         id : 10,
         firstname:"Lagertha",
         lastname:"Brok",
+        email:"temp@gmail.com",
         status:"pending",
         name : "user 5",
         roles : [2,3]
