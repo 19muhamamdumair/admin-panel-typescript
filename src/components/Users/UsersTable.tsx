@@ -31,7 +31,12 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import StatusDropdown from "./UserStatusDropdown";
 import RoleDropdown from "./RoleDropdown";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridColumnHeaderParams,
+  GridValueGetterParams,
+} from "@mui/x-data-grid";
 import { user } from "../../data/Role";
 import { useEffect } from "react";
 import { Box } from "@mui/system";
@@ -39,15 +44,15 @@ import { makeStyles } from "@mui/styles";
 import { group_Role } from "../../data/Role";
 import Person from "@material-ui/icons/Person";
 import { useMemo } from "react";
-
+let rowLength: any;
 const useStyles = makeStyles({
   hideRightSeparator: {
-    // '& .MuiDataGrid-columnHeaderTitle': {
-    //     visibility: 'hidden',
-    // },
-    // '&.MuiDataGrid-root .MuiDataGrid-iconSeparator':{
-    //   visibility: 'hidden',
-    // }
+    "& > .MuiDataGrid-columnSeparator": {
+      visibility: "hidden",
+      "& .MuiDataGrid-columnHeaderTitle": {
+        backgroundColor: "black",
+      },
+    },
   },
   giveItemMargin: {
     "&.MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input":
@@ -59,40 +64,42 @@ const useStyles = makeStyles({
 const UsersTable = React.memo(() => {
   const [userData, setUserData] = useState<any>(user);
   const [roles, setRoles] = useState<any>(group_Role);
-  const [c, setC] = useState<any>([{}]);
+  const [columns, setColumns] = useState<any>([{}]);
   const [rows, setRows] = useState<any>([]);
   const [navName, setNavName] = React.useState("all");
   const [checkBoxSelection, setCheckBoxSelection] = useState<boolean>(false);
   const [sortValue, setSortValue] = useState<any>("");
-
+  const randomColor = () => Math.floor(Math.random() * 16777215).toString(16);
+  document.body.style.backgroundColor = "#" + randomColor;
   const classes = useStyles();
-
+  const [listLength, setListLength] = useState<any>(null);
   useEffect(() => {
     let rows: any = [];
-    if(sortValue==="First name A-Z")
-    {
-      let tempArr=userData.sort((a:any, b:any) => a.firstname.localeCompare(b.firstname))
-      setUserData(tempArr)
-    }
-    else if (sortValue==="First name Z-A")
-    {
-      let tempArr=userData.sort((a:any, b:any) => b.firstname.localeCompare(a.firstName))
-      setUserData(tempArr)
-    } 
-    else if (sortValue==="Last name A-Z")
-    {
-      let tempArr=userData.sort((a:any, b:any) => a.lastname.localeCompare(b.lastname))
-      setUserData(tempArr)
-    }
-    else if (sortValue==="Last name Z-A")
-    {
-      let tempArr=userData.sort((a:any, b:any) => b.lastname.localeCompare(a.lastname))
-      setUserData(tempArr)
-    }
-    else if(sortValue==="Status")
-    {
-      let tempArr=userData.sort((a:any, b:any) => a.status.localeCompare(b.status))
-      setUserData(tempArr)
+    if (sortValue === "First name A-Z") {
+      let tempArr = userData.sort((a: any, b: any) =>
+        a.firstname.localeCompare(b.firstname)
+      );
+      setUserData(tempArr);
+    } else if (sortValue === "First name Z-A") {
+      let tempArr = userData.sort((a: any, b: any) =>
+        b.firstname.localeCompare(a.firstName)
+      );
+      setUserData(tempArr);
+    } else if (sortValue === "Last name A-Z") {
+      let tempArr = userData.sort((a: any, b: any) =>
+        a.lastname.localeCompare(b.lastname)
+      );
+      setUserData(tempArr);
+    } else if (sortValue === "Last name Z-A") {
+      let tempArr = userData.sort((a: any, b: any) =>
+        b.lastname.localeCompare(a.lastname)
+      );
+      setUserData(tempArr);
+    } else if (sortValue === "Status") {
+      let tempArr = userData.sort((a: any, b: any) =>
+        a.status.localeCompare(b.status)
+      );
+      setUserData(tempArr);
     }
 
     userData.map((user: any) => {
@@ -100,17 +107,23 @@ const UsersTable = React.memo(() => {
       user.roles.find((f: any) => {
         userRole += roles
           .filter((singleRoleObject: any) => singleRoleObject.id === f)
-          .map((selectedRole: any) => selectedRole.name);
+          .map((selectedRole: any) => selectedRole.name + ", ");
       });
+      userRole = userRole.substr(0, userRole.length - 2);
+
       if (navName === "all") {
         rows.push({
           id: user.id,
           avatar: "/broken-image.jpg",
-          fullname: {fullname:user?.firstname + " " + user?.lastname,email:user.email},
+          fullname: {
+            fullname: user?.firstname + " " + user?.lastname,
+            email: user.email,
+          },
           status: user.status,
           role: userRole,
           firstName: user?.firstname,
           lastName: user?.lastname,
+          randomColor: randomColor(),
         });
       } else {
         // console.log(navName, user.status);
@@ -118,49 +131,48 @@ const UsersTable = React.memo(() => {
           rows.push({
             id: user.id,
             avatar: "/broken-image.jpg",
-            fullname: {fullname:user?.firstname + " " + user?.lastname,email:user.email},
+            fullname: {
+              fullname: user?.firstname + " " + user?.lastname,
+              email: user.email,
+            },
             status: user.status,
             role: userRole,
             firstName: user?.firstname,
             lastName: user?.lastname,
+            randomColor: randomColor(),
           });
         }
       }
     });
 
     setRows(rows);
+    rowLength = rows.length;
+    setListLength(10);
     // debugger
-
-  }, [navName,sortValue]);
-  useEffect(()=>{
-    // debugger
-console.log(sortValue)
-// debugger
-if(sortValue==="First name")
-{
-
-}
-console.log(rows)
-  },[sortValue,navName])
-
-  const requestSearch = () => {
-    // const filteredRows = originalRows.filter((row) => {
-    //   return row.name.toLowerCase().includes(searchedVal.toLowerCase());
-    // });
-    // setRows(filteredRows);
-  };
-
-  let columns: GridColDef[] = [];
-  const setColumnsData: any = () => {
-    // setFlag(1)
-    columns = [
+  }, [navName, sortValue]);
+  let c: GridColDef[] = [];
+  useEffect(() => {
+    c = [
       {
         field: "avatar",
-        flex: 0,
+        sortable: false,
+        disableColumnMenu: true,
+        headerName: "Showing " + rowLength + " users",
+        headerClassName: classes.hideRightSeparator,
+        width: 70,
         renderCell: (params) => {
           return (
             <>
-              <Avatar src={params.row.avatar}>
+              <Avatar
+                src={params.row.avatar}
+                sx={{
+                  position: "absolute",
+                  bgcolor: "#" + params.row.randomColor,
+                  "&.MuiDataGrid-columnHeaderTitle": {
+                    position: "absolute",
+                  },
+                }}
+              >
                 {params.row?.firstName?.charAt(0)}
                 {params.row?.lastName?.charAt(0)}
               </Avatar>
@@ -168,22 +180,38 @@ console.log(rows)
           );
         },
       },
-      { field: "fullname", flex: 1,
-      renderCell: (params) => (
-        <div>
-          <Typography>{params.row.fullname.fullname}</Typography>
-          <Typography color="textSecondary" fontSize={"12px"} fontStyle={"italic"}>{params.row.fullname.email}</Typography>
-        </div>
-      )
-    },
+      {
+        field: "fullname",
+        sortable: false,
+        disableColumnMenu: true,
+        headerName: "",
+        headerClassName: classes.hideRightSeparator,
+        width: 250,
+        renderCell: (params) => (
+          <div>
+            <Typography>{params.row.fullname.fullname}</Typography>
+            <Typography
+              color="textSecondary"
+              fontSize={"12px"}
+              fontStyle={"italic"}
+            >
+              {params.row.fullname.email}
+            </Typography>
+          </div>
+        ),
+      },
       {
         field: "status",
-        flex: 1,
+        sortable: false,
+        disableColumnMenu: true,
+        headerName: "",
+        headerClassName: classes.hideRightSeparator,
+        width: 150,
         renderCell: (params) => {
           // debugger
           return (
             <>
-               <Box
+              <Box
                 sx={{
                   border: "1px solid #c2eab6",
                   backgroundColor: "#c2eab6",
@@ -192,139 +220,177 @@ console.log(rows)
                 }}
               >
                 {params.row.status}
-              </ Box>
-              
+              </Box>
             </>
           );
         },
       },
       {
         field: "role",
-        flex: 0,
+        sortable: false,
+        disableColumnMenu: true,
+        headerName: "",
+        headerClassName: classes.hideRightSeparator,
+        width: 290,
       },
     ];
-    return columns;
+    setColumns(c);
+  }, [navName, sortValue]);
+  const requestSearch = () => {
+    // const filteredRows = originalRows.filter((row) => {
+    //   return row.name.toLowerCase().includes(searchedVal.toLowerCase());
+    // });
+    // setRows(filteredRows);
   };
+  const sortByComponent = () => {
+    return (
+      
+        <FormControl sx={{ ml:"10px",mr:"10px", minWidth: 120,position:"absolute",right:0,zIndex:1 }} size="small">
+          <Select
+            value={sortValue}
+            onChange={(e) => setSortValue(e.target.value)}
+            displayEmpty
+            inputProps={{
+              "aria-label": "Without label",
+              style: { position: "absolute" },
+            }}
+            IconComponent={() => {
+              return (
+                <>
+                  <Typography
+                    sx={{
+                      marginRight: "48px",
+                      position: "absolute",
+                      marginLeft: 1,
+                      fontSize: "12px",
+                      color: "#848383",
+                    }}
+                  >
+                    Sort by
+                  </Typography>
+                  <Box
+                    component="img"
+                    src={sort}
+                    sx={{ wdith: "10px", height: "10px", mr: "10px" }}
+                  />
+                </>
+              );
+            }}
+            SelectDisplayProps={{
+              style: {
+                marginLeft: "37px",
+                paddingRight: "7px",
+                fontSize: "12px",
+              },
+            }}
+          >
+            <MenuItem sx={{ display: "none" }} value="">
+              Last name A-Z
+            </MenuItem>
 
-  useEffect(() => {
-    let cdata = setColumnsData();
-    setC(cdata);
-  }, []);
+            <MenuItem value="Last name A-Z">Last name A-Z</MenuItem>
+            <MenuItem value="Last name Z-A">Last name Z-A</MenuItem>
+            <MenuItem value={"First name A-Z"}>First name A-Z</MenuItem>
+            <MenuItem value={"First name Z-A"}>First name Z-A</MenuItem>
+            <MenuItem value={"Status"}>Status</MenuItem>
+          </Select>
+        </FormControl>
+    );
+  };
 
   return (
     <>
-      <Grid sx={{ width: "100%" }} container item component={Paper}>
+      <Grid
+        xl={12}
+        lg={12}
+        md={12}
+        sm={12}
+        xs={12}
+        container
+        item
+        component={Paper}
+      >
         <UserNavbar setNavName={setNavName} />
-
-        <TextField
-          type={"search"}
-          sx={{
-            "& legend": { display: "none" },
-            "& fieldset": { top: 0 },
-            width: { xl: "70%", lg: "70%", md: 370, sm: 370, xs: 220 },
-            ml: "10px",
-            mt: "0",
-          }}
-          placeholder=" Filter users by name or tag"
-          hiddenLabel
-          id="filled-hidden-label-small"
-          size="small"
-          onChange={requestSearch}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
-        <StatusDropdown />
-
-        <RoleDropdown />
-        <Grid item container justifyContent={"end"}>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <Select
-              value={sortValue}
-              onChange={(e) => setSortValue(e.target.value)}
-              displayEmpty
-              inputProps={{
-                "aria-label": "Without label",
-                style: { position: "absolute" },
-              }}
-              IconComponent={() => {
-                return (
-                  <>
-                    <Typography
-                      sx={{
-                        marginRight: "48px",
-                        position: "absolute",
-                        marginLeft: 1,
-                        fontSize: "12px",
-                        color: "#848383",
-                      }}
-                    >
-                      Sort by
-                    </Typography>
-                    <Box
-                      component="img"
-                      src={sort}
-                      sx={{ wdith: "10px", height: "10px", mr: "10px" }}
-                    />
-                  </>
-                );
-              }}
-              SelectDisplayProps={{
-                style: {
-                  marginLeft: "37px",
-                  paddingRight: "7px",
-                  fontSize: "12px",
+        <Grid item container>
+          <Grid container item xl={8} lg={8} md={8} sm={8} xs={12}>
+            <TextField
+              type={"search"}
+              sx={{
+                "& legend": { display: "none" },
+                "& fieldset": { top: 0 },
+                width: {
+                  xl: "100%",
+                  lg: "100%",
+                  md: "100%",
+                  sm: "100%",
+                  xs: "100%",
                 },
+                ml: "10px",
+                mr: { xs: "10px", xl: 0, lg: 0, md: 0, sm: 0 },
+                mt: { xs: 1, xl: 0, lg: 0, md: 0, sm: 0 },
+                mb: { xs: 1, xl: 0, lg: 0, md: 0 },
               }}
-            >
-              <MenuItem sx={{ display: "none" }} value="">
-                Last name A-Z
-              </MenuItem>
-              
-              <MenuItem value="Last name A-Z">Last name A-Z</MenuItem>
-              <MenuItem  value="Last name Z-A">
-                Last name Z-A
-              </MenuItem>
-              <MenuItem value={"First name A-Z"}>First name A-Z</MenuItem>
-              <MenuItem value={"First name Z-A"}>First name Z-A</MenuItem>
-              <MenuItem value={"Status"}>Status</MenuItem>
-             
-            </Select>
-          </FormControl>
+              placeholder=" Filter users by name or tag"
+              hiddenLabel
+              id="filled-hidden-label-small"
+              size="small"
+              onChange={requestSearch}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid container item xl={4} lg={4} md={4} sm={4} xs={12}>
+            <Grid item container xl={6} lg={6} md={6} sm={6} xs={12}>
+              <StatusDropdown />
+            </Grid>
+            <Grid item container xl={6} lg={6} md={6} sm={6} xs={12}>
+              <RoleDropdown />
+            </Grid>
+          </Grid>
         </Grid>
-        {/* <Typography sx={{fontWeight:'bold',color:'grey',fontSize:'12px',position:'absolute',top:"26em",left:'28em'}}>Showing 50 users</Typography> */}
-        {/* <FormGroup sx={{ml:2,mb:-2}}>
-            <FormControlLabel control={<Checkbox onChange={()=>setCheckBoxSelection(!checkBoxSelection)}/>} label={<Typography sx={{fontWeight:'bold',color:'grey',fontSize:'12px'}}>Showing 50 users</Typography>} />
-          </FormGroup> */}
+        
         <Grid
           sx={{
             height: 400,
             display: "flex",
             justifyContent: "center",
-            width: "100%",
+            position: "relative"
+            // width: "100%",
           }}
           container
         >
+          {sortByComponent()}
           <DataGrid
             rows={rows}
-            columns={c}
+            columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}
             getRowClassName={() => "paxton-table--row"}
             checkboxSelection
-            className={classes.hideRightSeparator}
-            // headerHeight={0}
             sx={{
-              "& .css-f3jnds-MuiDataGrid-columnHeaders": {
+              "& .MuiDataGrid-columnHeaderTitle": {
                 position: "absolute",
-                top: -2,
+                fontWeight: "bold",
+              },
+              "&.MuiDataGrid-root .MuiDataGrid-iconSeparator": {
+                display: "none",
+              },
+              "&.MuiDataGrid-root":{
+                  overflowY:'auto'
               },
               justifyContent: "center",
               width: "100%",
+              borderTop: 0,
+              overflow: "scroll",
+              columnWidth: 100,
+              scrolling: {
+                columnRenderingMode: "virtual",
+              },
             }}
           />
         </Grid>

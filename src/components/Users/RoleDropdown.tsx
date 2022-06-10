@@ -15,9 +15,9 @@ export default function RoleDropdown() {
 
 
   return (
-    <Box  >
-      <Grid item>
-                <FormControl  sx={{borderRadius:'10em'
+    // <Box  >
+      
+                <FormControl  sx={{borderRadius:'10em',width:"100%",mr:'10px',ml:{xl:0,lg:0,md:0,sm:0,xs:"10px"}
             
             }}>
                   <InputLabel
@@ -26,11 +26,7 @@ export default function RoleDropdown() {
                   >
                     Role
                   </InputLabel>
-                  <Box
-                    sx={{
-                      width: { xl: 129, lg: 129, md: 129, sm: 129, xs: 220 },
-                    }}
-                  >
+                 
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
@@ -43,16 +39,17 @@ export default function RoleDropdown() {
                           sm: "100%",
                           xs: "100%",
                          
-                        // backgroundColor:'black',
-                        borderRadius:"0 5px 5px 0"
+                
+
                         },
                         height: 40,
+                        borderRadius:{xl:"0 5px 5px 0",lg:"0 5px 5px 0",md:"0 5px 5px 0",sm:"0 5px 5px 0",xs:"5px 5px 5px 5px"},
                         mb: 1,
                         p: 1,
                         color: "black",
                         fontSize: "9px",
                       }}
-                      label="User S"
+                      label="User "
                       variant="outlined"
                       onChange={(e) => setRole(e.target.value)}
                     >
@@ -61,9 +58,9 @@ export default function RoleDropdown() {
                       </MenuItem>
                       
                     </Select>
-                  </Box>
+                
                 </FormControl>
-              </Grid>
-    </Box>
+           
+    // </Box>
   );
 }

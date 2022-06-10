@@ -16,20 +16,16 @@ export default function StatusDropdown() {
 
 
   return (
-    <Box sx={{ml:'5px',}} >
-      <Grid item>
-                <FormControl>
+    // <Box sx={{ml:'5px',}} >
+    
+                <FormControl sx={{width:'100%',ml:{xs:"10px"},mr:{xl:0,lg:0,md:0,sm:0,xs:"10px"}}}>
                   <InputLabel
                     variant="outlined"
                     sx={{ fontSize: "11px", fontWeight: "bold" }}
                   >
                     User Status
                   </InputLabel>
-                  <Box
-                    sx={{
-                      width: { xl: 129, lg: 129, md: 129, sm: 129, xs: 220 },
-                    }}
-                  >
+                 
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
@@ -41,8 +37,9 @@ export default function StatusDropdown() {
                           md: "100%",
                           sm: "100%",
                           xs: "100%",
-                          borderRadius:"5px 0 0 5px"
+                          
                         },
+                        borderRadius:{xl:"5px 0 0 5px",lg:"5px 0 0 5px",md:"5px 0 0 5px",sm:"5px 0 0 5px",xs:"5px 5px 5px 5px"},
                         height: 40,
                         mb: 1,
                         p: 1,
@@ -58,9 +55,9 @@ export default function StatusDropdown() {
                       </MenuItem>
                       
                     </Select>
-                  </Box>
+                  
                 </FormControl>
-              </Grid>
-    </Box>
+              
+    // </Box>
   );
 }

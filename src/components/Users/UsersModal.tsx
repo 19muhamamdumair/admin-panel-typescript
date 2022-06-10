@@ -96,8 +96,7 @@ const inputRef:any = React.useRef();
 let inputElement:any = useRef();
 
 const focusInput = () => {
-  // alert("hello")
-  debugger
+  
   inputElement.current.focus();
   inputElement.current.click()
   console.log(inputElement)
