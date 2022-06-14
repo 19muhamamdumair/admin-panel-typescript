@@ -38,7 +38,7 @@ export default function UserNavbar(props:Props) {
       />
       <BottomNavigationAction
         label="Active"
-        value="active"
+        value="Active"
         sx={{maxWidth:'82px',  "&.Mui-selected": {
             // backgroundColor:'blue',
             borderBottom:'2px solid green',
@@ -47,7 +47,7 @@ export default function UserNavbar(props:Props) {
       />
       <BottomNavigationAction
         label="Suspended"
-        value="suspended"
+        value="Suspended"
         sx={{maxWidth:'82px',  "&.Mui-selected": {
             // backgroundColor:'blue',
             borderBottom:'2px solid green',
@@ -56,7 +56,7 @@ export default function UserNavbar(props:Props) {
       />
        <BottomNavigationAction
         label="Pending"
-        value="pending"
+        value="Pending"
         sx={{maxWidth:'82px',  "&.Mui-selected": {
             // backgroundColor:'blue',
             borderBottom:'2px solid green',

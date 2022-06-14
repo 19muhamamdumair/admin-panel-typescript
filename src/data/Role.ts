@@ -62,7 +62,7 @@ export const user = [
         firstname:"Umair",
         lastname:"Ali",
         email:"temp@gmail.com",
-        status:"active",
+        status:"Active",
         name : "user 1",
         roles : [1,2,3]
     },
@@ -71,7 +71,7 @@ export const user = [
         firstname:"Kane",
         lastname:"William",
         email:"temp@gmail.com",
-        status:"active",
+        status:"Active",
         name : "user 2",
         roles : [1,4]
 
@@ -81,7 +81,7 @@ export const user = [
         firstname:"John",
         lastname:"Doe",
         email:"temp@gmail.com",
-        status:"suspended",
+        status:"Suspended",
         name : "user 3",
         roles : [1]
 
@@ -91,7 +91,7 @@ export const user = [
         firstname:"Irtaza",
         lastname:"Hammad",
         email:"temp@gmail.com",
-        status:"pending",
+        status:"Pending",
         name : "user 4",
         roles : [1, 4]
 
@@ -101,7 +101,7 @@ export const user = [
         firstname:"Ali",
         lastname:"Hassan",
         email:"temp@gmail.com",
-        status:"pending",
+        status:"Pending",
         name : "user 5",
         roles : [2,3]
 
@@ -110,7 +110,7 @@ export const user = [
         firstname:"Awais",
         lastname:"A",
         email:"temp@gmail.com",
-        status:"active",
+        status:"Active",
         name : "user 6",
         roles : [1,2,3]
     },
@@ -119,7 +119,7 @@ export const user = [
         firstname:"Jack",
         lastname:"Jones",
         email:"temp@gmail.com",
-        status:"active",
+        status:"Active",
         name : "user 7",
         roles : [1,4]
 
@@ -129,7 +129,7 @@ export const user = [
         firstname:"Dj",
         lastname:"Bravo",
         email:"temp@gmail.com",
-        status:"suspended",
+        status:"Suspended",
         name : "user 3",
         roles : [1]
 
@@ -139,7 +139,7 @@ export const user = [
         firstname:"Jon",
         lastname:"Snow",
         email:"temp@gmail.com",
-        status:"pending",
+        status:"Pending",
         name : "user 4",
         roles : [1, 4]
 
@@ -149,7 +149,7 @@ export const user = [
         firstname:"Lagertha",
         lastname:"Brok",
         email:"temp@gmail.com",
-        status:"pending",
+        status:"Pending",
         name : "user 5",
         roles : [2,3]
 
