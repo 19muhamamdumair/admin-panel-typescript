@@ -50,6 +50,7 @@ import { makeStyles } from "@mui/styles";
 import { group_Role } from "../../data/Role";
 import Person from "@material-ui/icons/Person";
 import { useMemo } from "react";
+import Tags from "./Tags";
 let rowLength: any;
 const useStyles = makeStyles({
   hideRightSeparator: {
@@ -75,7 +76,7 @@ const useStyles = makeStyles({
 });
 
 const UsersTable = React.memo(() => {
-  const [originalData,setOriginalData]=useState<any>(user)
+  const [originalData, setOriginalData] = useState<any>(user);
   const [userData, setUserData] = useState<any>(user);
   const [roles, setRoles] = useState<any>(group_Role);
   const [columns, setColumns] = useState<any>([]);
@@ -89,11 +90,21 @@ const UsersTable = React.memo(() => {
   const randomColor = () => Math.floor(Math.random() * 16777215).toString(16);
   document.body.style.backgroundColor = "#" + randomColor;
   const [renderFlag, setRenderFlag] = useState<boolean>(false);
-const [statusFilter,setStatusFilter]=useState<any>(null)
-const [roleFilter,setRoleFilter]=useState<any>(null)
-const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
+  const [statusFilter, setStatusFilter] = useState<any>(null);
+  const [roleFilterId, setRoleFilter] = useState<any>(null);
+  const [changeDataFlag, setChangeDataFlag] = useState<any>(false);
   const [selectionModel, setSelectionModel] = React.useState([]);
-  const [d, setD] = useState<any>([{}]);
+  const [FilterAgainFlag, setFilterAgainFlag] = useState<any>(false);
+  const [chipData, setChipData] = useState<any>([
+    { category: "Role", value: null, id: null },
+    { category: "Status", value: null, id: null },
+  ]);
+  const [requestCounter, setRequestCounter] = useState<any>(0);
+  const [userFilterName, setUserFilterName] = useState<any>("");
+  const [chipFlag, setChipFlag] = useState<boolean>(false);
+  const [userFilterData, setUserFilterData] = useState<any>(user);
+  const [statusPrevData, setStatusPrevData] = useState<any>(user);
+
   //status colors
   const [data, setData] = useState<any>([
     {
@@ -113,39 +124,153 @@ const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
     },
   ]);
 
-  useEffect(()=>{
- 
-    let tempData:any=[]
-    // userData.map((user:any)=>{
-      
-    //  debugger
-    //  tempData.push(...filteredRows.filter((user:any) =>user.roles.find((roleId:any)=>roleId===roleFilter)))
-    // tempData.push(...userData.filter((user:any) =>user.roles.find((roleId:any)=>roleId===roleFilter)))
-   
-      // data.map((user:any)=>{
-      //   user.roles.map((roleId:any)=>{
-      //     if(roleId===roleFilter)
-      //     {
-      //       tempData.push(user)
-      //     }
-      //   })
-      // })
-        
-     
-      if(roleFilter!==null)
-      {
+  //deleting filter by tag
+  const handleDelete = (category: any, value: any, id: any) => () => {
+  
+    if (category === "Input") {
+      setChipData(chipData.filter((data: any) => data.value !== value));
+      setUserData(userData.filter((user: any) => user.id !== id));
+      setUserFilterData(userData.filter((user: any) => user.id !== id));
+      setChangeDataFlag(!changeDataFlag);
+    } else {
+      chipData.map((data: any) => {
+        if (data.category === category) {
+          data.value = null;
+        }
+      });
+      setChipData(chipData);
+      if (category === "Status") {
+        setNavName("all");
+      } else if (category === "Role") {
+        setRoleFilter(0);
        
-
-        const filterData=originalData.filter((user:any) =>user.roles.find((roleId:any)=>roleId===roleFilter))
-        console.log(filterData)
-        setUserData(filterData)
-        setChangeDataFlag(!changeDataFlag)
       }
-       
-   
-  },[roleFilter])
+    }
+
+    setRenderFlag(!renderFlag);
+    setChipFlag(!chipFlag);
+  };
+
+  //after removing chipData
+  useEffect(() => {
+    if (userData.length === 0) {
+      setUserData(originalData);
+      setRequestCounter(0);
+    }
+
+    if (roleFilterId !== null) {
+ 
+      setRoleFilter(roleFilterId);
+      setFilterAgainFlag(!FilterAgainFlag);
+    }
+    else if(roleFilterId===null)
+    {
+ 
+      if(userFilterData.length===0&&navName==="all")
+      {
+        setUserData(originalData)
+        setRequestCounter(0);
+      }
+      else if(userFilterData.length!==0)
+      {
+
+        setUserData(userFilterData)
+        
+      }
+
+    }
+
+    setChangeDataFlag(!changeDataFlag);
+  }, [chipFlag]);
+
+  //filter by role
+  useEffect(() => {
+    if (roleFilterId !== null && requestCounter === 0) {
+    
+      if (roleFilterId === 0) {
+        setUserData(originalData);
+        setChangeDataFlag(!changeDataFlag);
+      } else {
+        const filterData = originalData.filter((user: any) =>
+          user.roles.find((roleId: any) => roleId === roleFilterId)
+        );
+        console.log(filterData);
+        setUserData(filterData);
+
+        setChangeDataFlag(!changeDataFlag);
+      }
+    } else if (requestCounter === 1) {
+ 
+      if (roleFilterId === 0) {
+        setUserData(userFilterData);
+        setChangeDataFlag(!changeDataFlag);
+        chipData.map((data: any) => {
+          if (data.category === "Role") {
+            data.value = null;
+          }
+        });
+        setChipData(chipData);
+      } else {
+        const filterData = userFilterData.filter((user: any) =>
+          user.roles.find((roleId: any) => roleId === roleFilterId)
+        );
+        console.log(filterData);
+        setUserData(filterData);
+
+        setChangeDataFlag(!changeDataFlag);
+      }
+    }
+  }, [roleFilterId, FilterAgainFlag]);
+
+  //setting chipData if filter by nav name
+  useEffect(() => {
+    if (navName !== "all") {
+      chipData.map((data: any) => {
+        if (data.category === "Status") {
+          data.value = navName;
+        }
+      });
+
+      setChipData(chipData);
+    } else if (navName === "all") {
+      chipData.map((data: any) => {
+        if (data.category === "Status") {
+          data.value = null;
+        }
+      });
+
+      setChipData(chipData);
+    }
+  }, [navName]);
+
+  //setting chipData if filter by role
+  useEffect(() => {
+    if (roleFilterId !== null && roleFilterId !== 0) {
+      roles.map((role: any) => {
+        if (role.id === roleFilterId) {
+          chipData.map((data: any) => {
+            if (data.category === "Role") {
+              data.value = role.name;
+            }
+          });
+
+          setChipData(chipData);
+        }
+      });
+    } else if (roleFilterId === 0) {
+      chipData.map((data: any) => {
+        if (data.category === "Role") {
+          data.value = "All";
+        }
+      });
+
+      setChipData(chipData);
+    }
+  }, [roleFilterId]);
+
   //setting rows
   useEffect(() => {
+ 
     let rowData: any = [];
     if (sortValue === "First name A-Z") {
       let tempArr = userData.sort((a: any, b: any) =>
@@ -212,7 +337,6 @@ const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
             firstName: user?.firstname,
             lastName: user?.lastname,
             randomColor: randomColor(),
-
           });
         }
       }
@@ -221,8 +345,8 @@ const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
     setRows(rowData);
     rowLength = rowData.length;
     setListLength(rowLength);
-    // debugger
-  }, [navName, sortValue,changeDataFlag]);
+    setRenderFlag(!renderFlag);
+  }, [navName, sortValue, changeDataFlag]);
 
   function getStatus(params: GridValueGetterParams) {
     return `${params.row.status || ""} `;
@@ -240,18 +364,15 @@ const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
     });
     setRows(users);
     setRenderFlag(!renderFlag);
-    userData.map((user:any)=>{
-      if(user.id===params.row.id)
-      {
-        user.status=params.value
+    userData.map((user: any) => {
+      if (user.id === params.row.id) {
+        user.status = params.value;
       }
-    })
-    setUserData(userData)
-    // debugger
+    });
+    setUserData(userData);
+ 
     return { ...params.row, value };
   }
-
-
 
   //setting columns
   let c: GridColDef[] = [];
@@ -323,7 +444,6 @@ const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
         ],
 
         renderCell: (params) => {
-
           let bColor: any;
           let fColor: any;
           data.map((f: any) => {
@@ -366,11 +486,80 @@ const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
     ];
     setColumns(c);
   }, [navName, sortValue, rowLength, renderFlag]);
-  const requestSearch = () => {
-    // const filteredRows = originalRows.filter((row) => {
-    //   return row.name.toLowerCase().includes(searchedVal.toLowerCase());
-    // });
-    // setRows(filteredRows);
+  function removeDuplicates(arr: any) {
+ 
+    return arr.filter((item: any, index: any) => {
+      return arr.indexOf(item) === index;
+    });
+  }
+  const requestSearch = (e: any) => {
+    console.log(requestCounter);
+    if (e.key === "Enter") {
+   
+      console.log(...userData);
+      let filterData: any;
+      let userID: any;
+      if (requestCounter === 0) {
+        filterData = originalData.filter(
+          (user: any) =>
+            user.firstname ===
+            e.target.value[0].toUpperCase() +
+              e.target.value.slice(1).toLowerCase()
+        );
+        userID = originalData.find((user: any) => {
+          if (
+            user.firstname ===
+            e.target.value[0].toUpperCase() +
+              e.target.value.slice(1).toLowerCase()
+          ) {
+            return user.id;
+          }
+        });
+      } else {
+        filterData = [
+          ...userData,
+          ...originalData.filter(
+            (user: any) =>
+              user.firstname ==
+              e.target.value[0].toUpperCase() +
+                e.target.value.slice(1).toLowerCase()
+          ),
+        ];
+        userID = originalData.find((user: any) => {
+          if (
+            user.firstname ===
+            e.target.value[0].toUpperCase() +
+              e.target.value.slice(1).toLowerCase()
+          ) {
+            return user.id;
+          }
+        });
+      }
+
+      let oldLength = filterData.length;
+      filterData = removeDuplicates(filterData);
+      let newLength = filterData.length;
+      setRequestCounter(1);
+
+      setUserData(filterData);
+      setUserFilterData(filterData);
+      if (filterData.length !== 0 && oldLength === newLength) {
+        let cData = [
+          ...chipData,
+          {
+            category: "Input",
+            value: e.target.value,
+            id: userID.id,
+          },
+        ];
+     
+        setChipData(cData);
+      }
+  
+      setUserFilterName("");
+      setChangeDataFlag(!changeDataFlag);
+    }
+
   };
 
   //suspending users
@@ -386,16 +575,14 @@ const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
     {
       selectionModel.map((val: any) => <h1>{val}</h1>);
     }
-    selectedRows.map((selectedRowId:any)=>{
-      userData.map((user:any)=>{
-        if(user.id===selectedRowId)
-        {
-          user.status="Suspended"
+    selectedRows.map((selectedRowId: any) => {
+      userData.map((user: any) => {
+        if (user.id === selectedRowId) {
+          user.status = "Suspended";
         }
-      })
-      
-    })
-    setUserData(userData)
+      });
+    });
+    setUserData(userData);
     setRows(users);
     setSelectionModel([]);
     setSelectedRows([null]);
@@ -408,13 +595,13 @@ const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
     selectedRows.map((selectedRowId: any) => {
       rowData = rowData.filter((row: any) => selectedRowId !== row.id);
     });
-    let deleteUser:any=userData
+    let deleteUser: any = userData;
     selectedRows.map((selectedRowId: any) => {
-     deleteUser= deleteUser.filter((user: any) => selectedRowId !== user.id);
+      deleteUser = deleteUser.filter((user: any) => selectedRowId !== user.id);
     });
-    setUserData(deleteUser)
+    setUserData(deleteUser);
     setRows(rowData);
-    debugger
+ ;
     rowLength = rowData.length;
   };
 
@@ -426,8 +613,6 @@ const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
       setDeleteFlag(true);
     }
   }, [selectedRows]);
-
-
 
   const sortByComponent = () => {
     return (
@@ -506,7 +691,7 @@ const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
         item
         component={Paper}
       >
-        <UserNavbar setNavName={setNavName} />
+        <UserNavbar setNavName={setNavName} navName={navName} />
         <Grid item container>
           <Grid container item xl={8} lg={8} md={8} sm={8} xs={12}>
             <TextField
@@ -530,7 +715,13 @@ const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
               hiddenLabel
               id="filled-hidden-label-small"
               size="small"
-              onChange={requestSearch}
+              value={userFilterName}
+              onChange={(e: any) => {
+                console.log(e.target.value.length);
+
+                setUserFilterName(e.target.value);
+              }}
+              onKeyPress={requestSearch}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -542,14 +733,14 @@ const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
           </Grid>
           <Grid container item xl={4} lg={4} md={4} sm={4} xs={12}>
             <Grid item container xl={6} lg={6} md={6} sm={6} xs={12}>
-              <StatusDropdown statusFilter={statusFilter}/>
+              <StatusDropdown statusFilter={statusFilter} />
             </Grid>
             <Grid item container xl={6} lg={6} md={6} sm={6} xs={12}>
-              <RoleDropdown setRoleFilter={setRoleFilter}/>
+              <RoleDropdown setRoleFilter={setRoleFilter} roleValue={roleFilterId}/>
             </Grid>
           </Grid>
         </Grid>
-
+        <Tags handleDelete={handleDelete} chipData={chipData} />
         <Grid
           sx={{
             height: 400,
@@ -618,11 +809,11 @@ const [changeDataFlag,setChangeDataFlag]=useState<any>(false)
             onSelectionModelChange={(rows: any) => {
               setSelectedRows(rows);
               setSelectionModel(rows);
-              // debugger
+           
               setRenderFlag(!renderFlag);
             }}
             isRowSelectable={(params: GridRowParams) => params.row}
-            // onCellClick={(params, event) => console.log(params, event)}
+     
             sx={{
               "& .MuiDataGrid-columnHeaderTitle": {
                 position: "absolute",

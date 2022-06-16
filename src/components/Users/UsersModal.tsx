@@ -1,4 +1,4 @@
-import React, { useEffect,useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
@@ -90,26 +90,27 @@ const UsersModal = () => {
   const [scroll, setScroll] = React.useState<DialogProps["scroll"]>("paper");
   const [currentRole, setCurrentRole] = useState<any>("");
   const [roles, setRoles] = useState<any>(group_Role);
-const [disableUserName,setDisableUserName]=useState<boolean>(true)
-const [disableEmail,setDisableEmail]=useState<boolean>(true)
-const inputRef:any = React.useRef();
-let inputElement:any = useRef();
-
-const focusInput = () => {
   
-  inputElement.current.focus();
-  inputElement.current.click()
-  console.log(inputElement)
-};
+  const [originalRoles, setOriginalRoles] = useState<any>(group_Role);
+  const [disableUserName, setDisableUserName] = useState<boolean>(true);
+  const [disableEmail, setDisableEmail] = useState<boolean>(true);
+  const inputRef: any = React.useRef();
+  let inputElement: any = useRef();
+
+  const focusInput = () => {
+    inputElement.current.focus();
+    inputElement.current.click();
+    console.log(inputElement);
+  };
 
   const checkAllPermissions = (isChecked?: boolean) => {
-    groupPermission.map((singleGrouppermission: any) => {
-      singleGrouppermission.checked = isChecked;
-      singleGrouppermission.permissions.map((singlePermission: any) => {
-        singlePermission.checked = isChecked;
+    roles.map((groupRole: any) => {
+      groupRole.checked = isChecked;
+      groupRole.permissions_groups.map((singlePermissionGroup: any) => {
+        singlePermissionGroup.checked = isChecked;
       });
     });
-    setGroupPermission(groupPermission);
+    setRoles(roles);
     setCheckedFlag(!checkedFlag);
   };
   const CheckParentAndChildPermission = (
@@ -118,17 +119,17 @@ const focusInput = () => {
     isChecked?: boolean
   ) => {
     console.log(event, isChecked);
-    groupPermission.map((singleGrouppermission: any, index: number) => {
-      if (singleGrouppermission.id === parentId) {
-        singleGrouppermission.checked = isChecked;
-        singleGrouppermission.permissions.map(
-          (singlePermission: any, index: any) => {
-            singlePermission.checked = isChecked;
+    roles.map((groupRole: any, index: number) => {
+      if (groupRole.id === parentId) {
+        groupRole.checked = isChecked;
+        groupRole.permissions_groups.map(
+          (singlePermissionGroup: any, index: any) => {
+            singlePermissionGroup.checked = isChecked;
           }
         );
       }
     });
-    setGroupPermission(groupPermission);
+    setRoles(roles);
     // debugger;
     setCheckedFlag(!checkedFlag);
   };
@@ -137,7 +138,7 @@ const focusInput = () => {
     console.log(groupPermission);
     if (flag) {
       setPermissionsInfo(
-        groupPermission.map((permission: any) => ({
+        roles.map((permission: any) => ({
           ...permission,
           checked: isSelectAllChecked,
         }))
@@ -147,26 +148,26 @@ const focusInput = () => {
   }, [isSelectAllChecked]);
 
   const CheckChildPermission = (
-    groupId: any,
-    permissionId: any,
+    groupRoleId: any,
+    permissionGroupId: any,
     isChecked?: boolean
   ) => {
-    groupPermission.map((singleGroupPermission: any, index: number) => {
-      if (singleGroupPermission.id === groupId) {
+    roles.map((groupRole: any, index: number) => {
+      if (groupRole.id === groupRoleId) {
         var isAnyPermissionCheckedflag = false;
-        singleGroupPermission.permissions.find(
-          (singlePermission: any, index: any) => {
-            if (singlePermission.id === permissionId) {
-              singlePermission.checked = isChecked;
+        groupRole.permissions_groups.find(
+          (singlePermissionGroup: any, index: any) => {
+            if (singlePermissionGroup.permission_group_id === permissionGroupId) {
+              singlePermissionGroup.checked = isChecked;
             }
-            if (singlePermission.checked) isAnyPermissionCheckedflag = true;
+            if (singlePermissionGroup.checked) isAnyPermissionCheckedflag = true;
           }
         );
 
-        singleGroupPermission.checked = isAnyPermissionCheckedflag || false;
+        groupRole.checked = isAnyPermissionCheckedflag || false;
       }
     });
-    setGroupPermission(groupPermission);
+    setRoles(roles);
     setCheckedFlag(!checkedFlag);
   };
 
@@ -196,7 +197,11 @@ const focusInput = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+  const changePermissions=(roleValue:string)=>{
+    setCurrentRole(roleValue)
+    setRoles(originalRoles.filter((groupRole:any)=>groupRole.name===roleValue))
 
+  }
   return (
     <>
       <Button
@@ -267,19 +272,17 @@ const focusInput = () => {
                       <IconButton
                         color="primary"
                         aria-label="edit"
-                        onClick={()=>{
-                          console.log(disableUserName)
-                        setDisableUserName(!disableUserName)
-                        focusInput()
-                        console.log(disableUserName)
+                        onClick={() => {
+                          console.log(disableUserName);
+                          setDisableUserName(!disableUserName);
+                          focusInput();
+                          console.log(disableUserName);
                         }}
-                      
                       >
                         <Box
                           component="img"
                           src={Edit_icon}
                           sx={{ wdith: "10px", height: "10px" }}
-                         
                         />
                       </IconButton>
                     </InputAdornment>
@@ -316,15 +319,13 @@ const focusInput = () => {
                 size="small"
                 placeholder="email"
                 disabled={disableEmail}
-                
-               
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton
                         color="primary"
                         aria-label="edit"
-                        onClick={()=>setDisableEmail(!disableEmail)}
+                        onClick={() => setDisableEmail(!disableEmail)}
                       >
                         <Box
                           component="img"
@@ -341,7 +342,7 @@ const focusInput = () => {
 
             <Grid container>
               <Grid item xl={3} lg={3} md={3} sm={4} xs={6}>
-                <Box sx={{ mt: 2.5, fontSize: 16 }}>Current Role</Box>
+                <Box sx={{ mt: 2.5, fontSize: 16 }}>{currentRole?currentRole:"None"}</Box>
               </Grid>
               <Grid item xs={6}>
                 <Box sx={{ mt: 1, fontSize: 16 }}>
@@ -385,12 +386,12 @@ const focusInput = () => {
                         }}
                         label="Existing Groupsssss"
                         variant="standard"
-                        onChange={(e) => setCurrentRole(e.target.value)}
+                        onChange={(event:any)=>changePermissions(event.target.value)}
                       >
-                        <MenuItem value="none" key="0">
+                        <MenuItem value="None" key="0">
                           None
                         </MenuItem>
-                        {roles.map((role: any) => (
+                        {originalRoles.map((role: any) => (
                           <MenuItem key={role.id} value={role.name}>
                             {role.name}
                           </MenuItem>
@@ -453,72 +454,80 @@ const focusInput = () => {
           </Grid>
           <Container sx={{ borderBottom: "4em" }}>
             <Grid container spacing={2}>
-              {groupPermission.map((data: any) => (
-                <Grid item xs={12} sm={6} md={6} lg={6}>
-                  <FormControlLabel
-                    classes={{ label: classes.label }}
-                    sx={{ fontSize: "4px", mt: -4 }}
-                    label={data.name}
-                    control={
-                      <Checkbox
-                        size="small"
-                        // indeterminate={checked[0] !== checked[1]}
-                        value={data.checked}
-                        checked={data.checked}
-                        onChange={(event, isChecked) =>
-                          CheckParentAndChildPermission(
-                            data.id,
-                            event,
-                            isChecked
-                          )
-                        }
-                      />
-                    }
-                  />
-
-                  {/* {children(data.permissions)} */}
-
-                  {data.permissions.map((p: any) => {
-                    return permissionInfo.map((sp: any) => {
-                      if (p.id === sp.id) {
-                        return (
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              ml: 3,
-                              mt: "-20px",
-                            }}
-                          >
-                            <FormControlLabel
-                              sx={{ marginTop: "7px" }}
-                              label={
-                                <Typography sx={{ fontSize: 12 }} color="black">
-                                  {sp.label}
-                                </Typography>
-                              }
-                              control={
-                                <Checkbox
-                                  size="small"
-                                  value={p.checked}
-                                  checked={p.checked}
-                                  onChange={(event: any, isChecked: boolean) =>
-                                    CheckChildPermission(
-                                      data.id,
-                                      p.id,
-                                      isChecked
-                                    )
-                                  }
-                                />
-                              }
-                            />
-                          </Box>
-                        );
+              {roles.map((groupRole: any) => {
+              
+                // debugger;
+                return (
+                  <Grid item xs={12} sm={6} md={6} lg={6}>
+                    <FormControlLabel
+                      classes={{ label: classes.label }}
+                      sx={{ fontSize: "4px", mt: -4 }}
+                      label={groupRole.name}
+                      control={
+                        <Checkbox
+                          size="small"
+                          // indeterminate={checked[0] !== checked[1]}
+                          value={groupRole.checked}
+                          checked={groupRole.checked}
+                          onChange={(event, isChecked) =>
+                            CheckParentAndChildPermission(
+                              groupRole.id,
+                              event,
+                              isChecked
+                            )
+                          }
+                        />
                       }
-                    });
-                  })}
-                </Grid>
-              ))}
+                    />
+                    {groupRole.permissions_groups?.map((p: any) => {
+                      // debugger
+                      return groupPermission?.map((gp: any) => {
+                        if (p.permission_group_id === gp.id) {
+                          return (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                ml: 3,
+                                mt: "-20px",
+                              }}
+                            >
+                              <FormControlLabel
+                                sx={{ marginTop: "7px" }}
+                                label={
+                                  <Typography
+                                    sx={{ fontSize: 12 }}
+                                    color="black"
+                                  >
+                                    {gp.name}
+                                  </Typography>
+                                }
+                                control={
+                                  <Checkbox
+                                    size="small"
+                                    value={p.checked}
+                                    checked={p.checked}
+                                    onChange={(
+                                      event: any,
+                                      isChecked: boolean
+                                    ) =>
+                                      CheckChildPermission(
+                                        groupRole.id,
+                                        p.permission_group_id,
+                                        isChecked
+                                      )
+                                    }
+                                  />
+                                }
+                              />
+                            </Box>
+                          );
+                        }
+                      });
+                    })}
+                  </Grid>
+                );
+              })}
             </Grid>
           </Container>
 
@@ -541,7 +550,6 @@ const focusInput = () => {
             <Button
               sx={{ border: "2px solid whitesmoke" }}
               onClick={handleCancel}
-              
             >
               Cancel
             </Button>
@@ -553,7 +561,6 @@ const focusInput = () => {
                   backgroundColor: "#0989e3",
                 },
               }}
-              
               onClick={handleToaster}
             >
               Save

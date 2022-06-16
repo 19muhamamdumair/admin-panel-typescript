@@ -32,7 +32,7 @@ export default function RoleTable() {
                     overflow: "hidden",
                   }}
                 >
-                  {row.permissions_group_id.length} Users
+                  {row.permissions_groups.length} Users
                 </TableCell>
               </TableRow>
             ))}

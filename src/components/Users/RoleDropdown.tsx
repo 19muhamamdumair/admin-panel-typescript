@@ -12,13 +12,21 @@ import { group_Role } from '../../data/Role';
 
 interface Props {
   setRoleFilter:any,
+  roleValue:any
 }
 
 export default function RoleDropdown(props:Props) {
 
   const [role, setRole] = useState<string>();
 
-
+  const getRoleValue=()=>{
+    // debugger
+    if(props.roleValue===0&&role!=='All')
+    {
+      setRole('All')
+    }
+    return role
+  }
 
   return (
     // <Box  >
@@ -36,7 +44,7 @@ export default function RoleDropdown(props:Props) {
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={role}
+                      value={getRoleValue()}
                       sx={{
                         width: {
                           xl: "100%",
@@ -61,6 +69,7 @@ export default function RoleDropdown(props:Props) {
                       variant="outlined"
                       onChange={(e) => props.setRoleFilter(e.target.value)}
                     >
+                      <MenuItem value={0}>All</MenuItem>
                       {
                         group_Role.map((role:any)=>(
                               <MenuItem value={role.id}>{role.name}</MenuItem>

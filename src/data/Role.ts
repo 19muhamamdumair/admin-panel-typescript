@@ -4,13 +4,16 @@ export const group_Role = [
     {
         id : 1,
         name : "Admin Role",
-        permissions_group_id : [
+        checked:true,
+        permissions_groups : [
             {
                 permission_group_id : 1,
+                checked:true,
                 permissions : [1,2,3]
             },
             {
                 permission_group_id : 2,
+                checked:true,
                 permissions : [1,2,3]
             }
         ]
@@ -18,9 +21,11 @@ export const group_Role = [
     {
         id : 2,
         name : "User Role 1",
-        permissions_group_id : [
+        checked:true,
+        permissions_groups: [
             {
                 permission_group_id : 1,
+                checked:true,
                 permissions : [1,2,3]
             }
         ]
@@ -28,17 +33,21 @@ export const group_Role = [
     {
         id : 3,
         name : "User Role 2",
-        permissions_group_id : [
+        checked:true,
+        permissions_groups: [
             {
                 permission_group_id : 1,
+                checked:true,
                 permissions : [1,2,3]
             },
             {
-                permission_group_id : 1,
+                permission_group_id : 2,
+                checked:true,
                 permissions : [1,2,3]
             },
             {
-                permission_group_id : 1,
+                permission_group_id : 3,
+                checked:true,
                 permissions : [1,2,3]
             }
         ]
@@ -46,9 +55,11 @@ export const group_Role = [
     {
         id : 4,
         name : "User Role 3",
-        permissions_group_id : [
+        checked:true,
+        permissions_groups: [
             {
                 permission_group_id : 1,
+                checked:true,
                 permissions : [1,2,3]
             }
         ]
