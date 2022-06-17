@@ -8,11 +8,23 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import IUser from "../../types/user.type";
 import FormControl from "@mui/material/FormControl";
-export default function RoleDropdown() {
+import { group_Role } from '../../data/Role';
 
-  const [role, setRole] = useState<string>();
+interface Props {
+  setRoleFilter:any,
+  roleValue:any
+}
 
+export default function RoleDropdown(props:Props) {
 
+  const [role, setRole] = useState<any>(0);
+
+  useEffect(()=>{
+    if(props.roleValue===0)
+    {
+      setRole(0)
+    }
+  },[props.roleValue])
 
   return (
     // <Box  >
@@ -46,16 +58,27 @@ export default function RoleDropdown() {
                         borderRadius:{xl:"0 5px 5px 0",lg:"0 5px 5px 0",md:"0 5px 5px 0",sm:"0 5px 5px 0",xs:"5px 5px 5px 5px"},
                         mb: 1,
                         p: 1,
-                        color: "black",
-                        fontSize: "9px",
+                      
+                        fontSize: "12px",
+                        fontWeight:'bold',
+                        color:'#666666'
                       }}
                       label="User "
                       variant="outlined"
-                      onChange={(e) => setRole(e.target.value)}
+                      onChange={(e) => {
+                        setRole(e.target.value)
+                        props.setRoleFilter(e.target.value)}
+                      
+                      }
                     >
-                      <MenuItem value="none" key="0">
-                        None
-                      </MenuItem>
+                      <MenuItem value={0}>All</MenuItem>
+                      {
+                        group_Role.map((role:any)=>(
+                              <MenuItem value={role.id}>{role.name}</MenuItem>
+                        ))
+                      }
+                     
+     
                       
                     </Select>
                 
