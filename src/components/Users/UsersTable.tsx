@@ -126,25 +126,24 @@ const UsersTable = React.memo(() => {
 
   //deleting filter by tag
   const handleDelete = (category: any, value: any, id: any) => () => {
-  
     if (category === "Input") {
       setChipData(chipData.filter((data: any) => data.value !== value));
-      setUserData(userData.filter((user: any) => user.id !== id));
-      setUserFilterData(userData.filter((user: any) => user.id !== id));
+      setUserData(userFilterData.filter((user: any) => user.id !== id));
+      setUserFilterData(userFilterData.filter((user: any) => user.id !== id));
       setChangeDataFlag(!changeDataFlag);
     } else {
-      chipData.map((data: any) => {
-        if (data.category === category) {
-          data.value = null;
-        }
-      });
-      setChipData(chipData);
       if (category === "Status") {
         setNavName("all");
       } else if (category === "Role") {
         setRoleFilter(0);
        
       }
+      chipData.map((data: any) => {
+        if (data.category === category) {
+          data.value = null;
+        }
+      });
+      setChipData(chipData);
     }
 
     setRenderFlag(!renderFlag);
@@ -153,31 +152,23 @@ const UsersTable = React.memo(() => {
 
   //after removing chipData
   useEffect(() => {
+    // debugger
     if (userData.length === 0) {
       setUserData(originalData);
       setRequestCounter(0);
     }
-
     if (roleFilterId !== null) {
- 
       setRoleFilter(roleFilterId);
       setFilterAgainFlag(!FilterAgainFlag);
     }
-    else if(roleFilterId===null)
-    {
- 
-      if(userFilterData.length===0&&navName==="all")
-      {
+    else if(roleFilterId===null) {
+      if(userFilterData.length===0 && navName==="all"){
         setUserData(originalData)
         setRequestCounter(0);
       }
-      else if(userFilterData.length!==0)
-      {
-
+      else if(userFilterData.length!==0) {
         setUserData(userFilterData)
-        
       }
-
     }
 
     setChangeDataFlag(!changeDataFlag);
@@ -185,11 +176,18 @@ const UsersTable = React.memo(() => {
 
   //filter by role
   useEffect(() => {
+    // debugger
     if (roleFilterId !== null && requestCounter === 0) {
     
       if (roleFilterId === 0) {
         setUserData(originalData);
         setChangeDataFlag(!changeDataFlag);
+        chipData.forEach((data: any) => {
+          if (data.category === "Role") {
+            data.value = null;
+          }
+        });
+        setChipData(chipData);
       } else {
         const filterData = originalData.filter((user: any) =>
           user.roles.find((roleId: any) => roleId === roleFilterId)
@@ -204,18 +202,20 @@ const UsersTable = React.memo(() => {
       if (roleFilterId === 0) {
         setUserData(userFilterData);
         setChangeDataFlag(!changeDataFlag);
-        chipData.map((data: any) => {
+        chipData.forEach((data: any) => {
           if (data.category === "Role") {
             data.value = null;
           }
         });
         setChipData(chipData);
       } else {
-        const filterData = userFilterData.filter((user: any) =>
-          user.roles.find((roleId: any) => roleId === roleFilterId)
-        );
-        console.log(filterData);
-        setUserData(filterData);
+        const filteredUsers = userFilterData.filter((user: any) => {
+          if(user?.roles.includes(roleFilterId)) {
+            return user;
+          }
+        })
+        console.log(filteredUsers);
+        setUserData(filteredUsers);
 
         setChangeDataFlag(!changeDataFlag);
       }
@@ -225,7 +225,7 @@ const UsersTable = React.memo(() => {
   //setting chipData if filter by nav name
   useEffect(() => {
     if (navName !== "all") {
-      chipData.map((data: any) => {
+      chipData.forEach((data: any) => {
         if (data.category === "Status") {
           data.value = navName;
         }
@@ -233,7 +233,7 @@ const UsersTable = React.memo(() => {
 
       setChipData(chipData);
     } else if (navName === "all") {
-      chipData.map((data: any) => {
+      chipData.forEach((data: any) => {
         if (data.category === "Status") {
           data.value = null;
         }
@@ -245,10 +245,11 @@ const UsersTable = React.memo(() => {
 
   //setting chipData if filter by role
   useEffect(() => {
+    // debugger
     if (roleFilterId !== null && roleFilterId !== 0) {
       roles.map((role: any) => {
         if (role.id === roleFilterId) {
-          chipData.map((data: any) => {
+          chipData.forEach((data: any) => {
             if (data.category === "Role") {
               data.value = role.name;
             }
@@ -258,7 +259,7 @@ const UsersTable = React.memo(() => {
         }
       });
     } else if (roleFilterId === 0) {
-      chipData.map((data: any) => {
+      chipData.forEach((data: any) => {
         if (data.category === "Role") {
           data.value = "All";
         }
@@ -270,7 +271,7 @@ const UsersTable = React.memo(() => {
 
   //setting rows
   useEffect(() => {
- 
+    // debugger
     let rowData: any = [];
     if (sortValue === "First name A-Z") {
       let tempArr = userData.sort((a: any, b: any) =>
@@ -486,12 +487,16 @@ const UsersTable = React.memo(() => {
     ];
     setColumns(c);
   }, [navName, sortValue, rowLength, renderFlag]);
+
+  //removing duplicates from user table
   function removeDuplicates(arr: any) {
  
     return arr.filter((item: any, index: any) => {
       return arr.indexOf(item) === index;
     });
   }
+  
+  
   const requestSearch = (e: any) => {
     console.log(requestCounter);
     if (e.key === "Enter") {

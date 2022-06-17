@@ -9,12 +9,30 @@ export const group_Role = [
             {
                 permission_group_id : 1,
                 checked:true,
-                permissions : [1,2,3]
+                permissions : [{
+                    id:1,
+                    checked:true
+                },{
+                    id:2,
+                    checked:true
+                },{
+                    id:3,
+                    checked:true
+                },]
             },
             {
                 permission_group_id : 2,
                 checked:true,
-                permissions : [1,2,3]
+                permissions : [{
+                    id:1,
+                    checked:true
+                },{
+                    id:2,
+                    checked:true
+                },{
+                    id:3,
+                    checked:true
+                },]
             }
         ]
     },
@@ -26,7 +44,16 @@ export const group_Role = [
             {
                 permission_group_id : 1,
                 checked:true,
-                permissions : [1,2,3]
+                permissions : [{
+                    id:1,
+                    checked:true
+                },{
+                    id:2,
+                    checked:true
+                },{
+                    id:3,
+                    checked:true
+                },]
             }
         ]
     },
@@ -38,17 +65,44 @@ export const group_Role = [
             {
                 permission_group_id : 1,
                 checked:true,
-                permissions : [1,2,3]
+                permissions :[{
+                    id:1,
+                    checked:true
+                },{
+                    id:2,
+                    checked:true
+                },{
+                    id:3,
+                    checked:true
+                },]
             },
             {
                 permission_group_id : 2,
                 checked:true,
-                permissions : [1,2,3]
+                permissions : [{
+                    id:1,
+                    checked:true
+                },{
+                    id:2,
+                    checked:true
+                },{
+                    id:3,
+                    checked:true
+                },]
             },
             {
                 permission_group_id : 3,
                 checked:true,
-                permissions : [1,2,3]
+                permissions : [{
+                    id:1,
+                    checked:true
+                },{
+                    id:2,
+                    checked:true
+                },{
+                    id:3,
+                    checked:true
+                },]
             }
         ]
     },
@@ -60,7 +114,16 @@ export const group_Role = [
             {
                 permission_group_id : 1,
                 checked:true,
-                permissions : [1,2,3]
+                permissions : [{
+                    id:1,
+                    checked:true
+                },{
+                    id:2,
+                    checked:true
+                },{
+                    id:3,
+                    checked:true
+                },]
             }
         ]
     }
@@ -109,7 +172,7 @@ export const user = [
     },
     {
         id : 5,
-        firstname:"Ali",
+        firstname:"Haider",
         lastname:"Hassan",
         email:"temp@gmail.com",
         status:"Pending",
@@ -141,7 +204,7 @@ export const user = [
         lastname:"Bravo",
         email:"temp@gmail.com",
         status:"Suspended",
-        name : "user 3",
+        name : "user 8",
         roles : [1]
 
     },
@@ -151,7 +214,7 @@ export const user = [
         lastname:"Snow",
         email:"temp@gmail.com",
         status:"Pending",
-        name : "user 4",
+        name : "user 9",
         roles : [1, 4]
 
     },
@@ -161,7 +224,7 @@ export const user = [
         lastname:"Brok",
         email:"temp@gmail.com",
         status:"Pending",
-        name : "user 5",
+        name : "user 10",
         roles : [2,3]
 
     }

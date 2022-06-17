@@ -17,16 +17,14 @@ interface Props {
 
 export default function RoleDropdown(props:Props) {
 
-  const [role, setRole] = useState<string>();
+  const [role, setRole] = useState<any>(0);
 
-  const getRoleValue=()=>{
-    // debugger
-    if(props.roleValue===0&&role!=='All')
+  useEffect(()=>{
+    if(props.roleValue===0)
     {
-      setRole('All')
+      setRole(0)
     }
-    return role
-  }
+  },[props.roleValue])
 
   return (
     // <Box  >
@@ -44,7 +42,7 @@ export default function RoleDropdown(props:Props) {
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={getRoleValue()}
+                      value={role}
                       sx={{
                         width: {
                           xl: "100%",
@@ -67,7 +65,11 @@ export default function RoleDropdown(props:Props) {
                       }}
                       label="User "
                       variant="outlined"
-                      onChange={(e) => props.setRoleFilter(e.target.value)}
+                      onChange={(e) => {
+                        setRole(e.target.value)
+                        props.setRoleFilter(e.target.value)}
+                      
+                      }
                     >
                       <MenuItem value={0}>All</MenuItem>
                       {
