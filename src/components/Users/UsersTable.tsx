@@ -126,6 +126,7 @@ const UsersTable = React.memo(() => {
 
   //deleting filter by tag
   const handleDelete = (category: any, value: any, id: any) => () => {
+    debugger
     if (category === "Input") {
       setChipData(chipData.filter((data: any) => data.value !== value));
       setUserData(userFilterData.filter((user: any) => user.id !== id));

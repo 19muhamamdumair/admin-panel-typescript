@@ -227,5 +227,45 @@ export const user = [
         name : "user 10",
         roles : [2,3]
 
-    }
+    },
+    {
+        id : 11,
+        firstname:"Naveed",
+        lastname:"Cheema",
+        email:"naveed@gmail.com",
+        status:"Pending",
+        name : "user 10",
+        roles : [2,3]
+
+    },
+    {
+        id : 12,
+        firstname:"Umer",
+        lastname:"Ilyas",
+        email:"umerilyas@gmail.com",
+        status:"Active",
+        name : "user 10",
+        roles : [1]
+
+    },
+    {
+        id : 13,
+        firstname:"Robert",
+        lastname:"Elikson",
+        email:"robert_elikson345@gmail.com",
+        status:"Suspended",
+        name : "user 10",
+        roles : [3]
+
+    },
+    {
+        id : 14,
+        firstname:"Irtaza",
+        lastname:"Anjum",
+        email:"irtaza453@gmail.com",
+        status:"Active",
+        name : "user 10",
+        roles : [2]
+
+    },
 ]
