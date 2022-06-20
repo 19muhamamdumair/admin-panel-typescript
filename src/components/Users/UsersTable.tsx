@@ -139,8 +139,8 @@ const UsersTable = React.memo(() => {
 
     chipData.map((filters: ChipDataType) => {
       if(filters.category === "Input") (FilterArray.filterUserName as any).push(filters.value.toLowerCase())
-      if(filters.category === "Status") FilterArray.filterUserStatus = filters.value 
-      if(filters.category === "Role") FilterArray.filterRoleId = filters.value
+      if(filters.category === "Status") FilterArray.filterUserStatus = filters.value  || ""
+      if(filters.category === "Role") FilterArray.filterRoleId = filters.id || 0
   })
 
 debugger
@@ -150,7 +150,7 @@ debugger
     && (FilterArray.filterUserStatus !== "" && user.status === FilterArray.filterUserStatus || true)));
 
 
-  },[chipData,chipFlag])
+  },[chipData])
   //deleting filter by tag
   const handleDelete = (category: any, value: any, id?: any) => () => {
     debugger
@@ -218,10 +218,12 @@ debugger
     let roleChipFindFlag = false
     let tmpChipData = [...chipData] 
 
+    let userRoleLabel = roles.find((role:any)=>role.id===roleFilterId)?.name
 
     tmpChipData = tmpChipData.map((singleChipData: any,index : number) => {
       if(singleChipData.category === "Role"){
-        singleChipData.value = roleFilterId
+        singleChipData.value = userRoleLabel
+        singleChipData.id = roleFilterId
         roleChipFindFlag = true
       }
       return singleChipData
@@ -232,8 +234,8 @@ debugger
         tmpChipData.push(
           {
             category : "Role",
-            value : roleFilterId,
-            label : "xyz"
+            value : userRoleLabel,
+            id : roleFilterId
           }
         )
       }
