@@ -20,7 +20,7 @@ const ListItem = styled('li')(({ theme }) => ({
 }));
 
 export default function ChipsArray(props:Props) {
- 
+
 
   return (
     <Paper
@@ -30,7 +30,7 @@ export default function ChipsArray(props:Props) {
         flexWrap: 'wrap',
         listStyle: 'none',
         p: 0.5,
-        m: 0,
+     marginBottom:{xl:"0",lg:0,md:"30px",sm:"30px",xs:0},
         boxShadow:'none'
         // backgroundColor:none
       }}
@@ -41,8 +41,8 @@ export default function ChipsArray(props:Props) {
        
 
        
-       return data.value!==null?(
-            <ListItem>
+       return data.value!==null&&data.value!=="All"?(
+            <ListItem >
               <Chip
                 sx={{borderRadius:"0px"}}
                 label={data.value}
