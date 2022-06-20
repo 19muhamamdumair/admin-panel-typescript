@@ -4,9 +4,11 @@ import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
 
-interface ChipData {
-  key: number;
-  label: string;
+export interface ChipData {
+  id?: number;
+  label?: string;
+  category?: string;
+  value?: any;
 }
 interface Props{
     chipData:any,
