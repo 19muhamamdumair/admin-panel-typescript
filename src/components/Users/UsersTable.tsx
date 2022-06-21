@@ -50,7 +50,14 @@ import { makeStyles } from "@mui/styles";
 import { group_Role } from "../../data/Role";
 import Person from "@material-ui/icons/Person";
 import { useMemo } from "react";
-import Tags from "./Tags";
+import ChipsArray, { ChipData as ChipDataType } from "./Tags";
+
+export interface ChipData {
+  key: number;
+  label: string;
+  category: string;
+}
+// import {chipData} from "./Tags";
 let rowLength: any;
 const useStyles = makeStyles({
   hideRightSeparator: {
@@ -81,7 +88,7 @@ const UsersTable = React.memo(() => {
   const [roles, setRoles] = useState<any>(group_Role);
   const [columns, setColumns] = useState<any>([]);
   const [rows, setRows] = useState<any>([]);
-  const [navName, setNavName] = React.useState("all");
+  const [navName, setNavName] = useState<any>(null);
   const [sortValue, setSortValue] = useState<any>("");
   const classes = useStyles();
   const [listLength, setListLength] = useState<any>(null);
@@ -95,10 +102,7 @@ const UsersTable = React.memo(() => {
   const [changeDataFlag, setChangeDataFlag] = useState<any>(false);
   const [selectionModel, setSelectionModel] = React.useState([]);
   const [FilterAgainFlag, setFilterAgainFlag] = useState<any>(false);
-  const [chipData, setChipData] = useState<any>([
-    { category: "Role", value: null, id: null },
-    { category: "Status", value: null, id: null },
-  ]);
+  const [chipData, setChipData] = useState<ChipDataType[]>([]);
   const [requestCounter, setRequestCounter] = useState<any>(0);
   const [userFilterName, setUserFilterName] = useState<any>("");
   const [chipFlag, setChipFlag] = useState<boolean>(false);
@@ -124,154 +128,140 @@ const UsersTable = React.memo(() => {
     },
   ]);
 
-  //deleting filter by tag
-  const handleDelete = (category: any, value: any, id: any) => () => {
-    if (category === "Input") {
-      setChipData(chipData.filter((data: any) => data.value !== value));
-      setUserData(userFilterData.filter((user: any) => user.id !== id));
-      setUserFilterData(userFilterData.filter((user: any) => user.id !== id));
-      setChangeDataFlag(!changeDataFlag);
-    } else {
-      if (category === "Status") {
-        setNavName("all");
-      } else if (category === "Role") {
-        setRoleFilter(0);
-       
-      }
-      chipData.map((data: any) => {
-        if (data.category === category) {
-          data.value = null;
-        }
-      });
-      setChipData(chipData);
-    }
-
-    setRenderFlag(!renderFlag);
-    setChipFlag(!chipFlag);
-  };
-
-  //after removing chipData
   useEffect(() => {
-    // debugger
-    if (userData.length === 0) {
-      setUserData(originalData);
-      setRequestCounter(0);
-    }
-    if (roleFilterId !== null) {
-      setRoleFilter(roleFilterId);
-      setFilterAgainFlag(!FilterAgainFlag);
-    }
-    else if(roleFilterId===null) {
-      if(userFilterData.length===0 && navName==="all"){
-        setUserData(originalData)
-        setRequestCounter(0);
-      }
-      else if(userFilterData.length!==0) {
-        setUserData(userFilterData)
-      }
-    }
+    const FilterArray = {
+      filterRoleId: 0,
+      filterUserStatus: "",
+      filterUserName: [],
+    };
+    let checkStepCount: any = 0,
+      newFilterUsers: any = [];
+    // debugger;
+    chipData.map((filters: ChipDataType) => {
+      if (filters.category === "Input") {
+        if (!FilterArray.filterUserName.length) ++checkStepCount;
 
+        (FilterArray.filterUserName as any).push(filters.value.toLowerCase());
+      }
+      if (filters.category === "Status" && filters.value != "All") {
+        FilterArray.filterUserStatus = filters.value || "";
+        ++checkStepCount;
+      }
+     
+      if (filters.category === "Role" && filters.id) {
+        FilterArray.filterRoleId = filters.id || 0;
+        ++checkStepCount;
+      }
+    });
+
+    // debugger
+
+    originalData.map((userInfo: any, index: number) => {
+      let checkStepsFulfilCount = 0;
+      if (FilterArray.filterUserName.length) {
+        if (
+          userInfo.firstname.toLowerCase() ===
+          FilterArray.filterUserName
+            .filter(
+              (username) =>
+                username === userInfo.firstname.toLowerCase() || true
+            )
+            .find((username) => username === userInfo.firstname.toLowerCase())
+        )
+          ++checkStepsFulfilCount;
+      }
+
+      if (FilterArray.filterRoleId !== null && FilterArray.filterRoleId !== 0) {
+        if (userInfo.roles.includes(FilterArray.filterRoleId)) {
+          ++checkStepsFulfilCount;
+        }
+      }
+
+      if (FilterArray.filterUserStatus !== "") {
+        if (userInfo.status === FilterArray.filterUserStatus) {
+          ++checkStepsFulfilCount;
+        }
+      }
+
+      if (checkStepsFulfilCount === checkStepCount) {
+        newFilterUsers.push(userInfo);
+      }
+    });
+
+    setUserData([...newFilterUsers]);
     setChangeDataFlag(!changeDataFlag);
-  }, [chipFlag]);
+  }, [chipData]);
+
+  //deleting filter by tag
+  const handleDelete = (category: any, value: any, id?: any) => () => {
+    setChipData([...chipData.filter((data: any) => data.value !== value)]);
+    if(category==="Status")
+    {
+      setNavName("All")
+    }
+    else if(category==="Role")
+    {
+      setRoleFilter(0)
+  
+    }
+   
+  };
 
   //filter by role
   useEffect(() => {
-    // debugger
-    if (roleFilterId !== null && requestCounter === 0) {
-    
-      if (roleFilterId === 0) {
-        setUserData(originalData);
-        setChangeDataFlag(!changeDataFlag);
-        chipData.forEach((data: any) => {
-          if (data.category === "Role") {
-            data.value = null;
-          }
+    if (roleFilterId || roleFilterId == 0) {
+      let roleChipFindFlag = false;
+      let tmpChipData = [...chipData];
+
+      let userRoleLabel =
+        roles.find((role: any) => role.id === roleFilterId)?.name || "All";
+
+      tmpChipData = tmpChipData.map((singleChipData: any, index: number) => {
+        if (singleChipData.category === "Role") {
+          singleChipData.value = userRoleLabel;
+          singleChipData.id = roleFilterId;
+          roleChipFindFlag = true;
+        }
+        return singleChipData;
+      });
+
+      if (!roleChipFindFlag) {
+        tmpChipData.push({
+          category: "Role",
+          value: userRoleLabel,
+          id: roleFilterId,
         });
-        setChipData(chipData);
-      } else {
-        const filterData = originalData.filter((user: any) =>
-          user.roles.find((roleId: any) => roleId === roleFilterId)
-        );
-        console.log(filterData);
-        setUserData(filterData);
-
-        setChangeDataFlag(!changeDataFlag);
       }
-    } else if (requestCounter === 1) {
- 
-      if (roleFilterId === 0) {
-        setUserData(userFilterData);
-        setChangeDataFlag(!changeDataFlag);
-        chipData.forEach((data: any) => {
-          if (data.category === "Role") {
-            data.value = null;
-          }
-        });
-        setChipData(chipData);
-      } else {
-        const filteredUsers = userFilterData.filter((user: any) => {
-          if(user?.roles.includes(roleFilterId)) {
-            return user;
-          }
-        })
-        console.log(filteredUsers);
-        setUserData(filteredUsers);
-
-        setChangeDataFlag(!changeDataFlag);
-      }
-    }
-  }, [roleFilterId, FilterAgainFlag]);
-
-  //setting chipData if filter by nav name
-  useEffect(() => {
-    if (navName !== "all") {
-      chipData.forEach((data: any) => {
-        if (data.category === "Status") {
-          data.value = navName;
-        }
-      });
-
-      setChipData(chipData);
-    } else if (navName === "all") {
-      chipData.forEach((data: any) => {
-        if (data.category === "Status") {
-          data.value = null;
-        }
-      });
-
-      setChipData(chipData);
-    }
-  }, [navName]);
-
-  //setting chipData if filter by role
-  useEffect(() => {
-    // debugger
-    if (roleFilterId !== null && roleFilterId !== 0) {
-      roles.map((role: any) => {
-        if (role.id === roleFilterId) {
-          chipData.forEach((data: any) => {
-            if (data.category === "Role") {
-              data.value = role.name;
-            }
-          });
-
-          setChipData(chipData);
-        }
-      });
-    } else if (roleFilterId === 0) {
-      chipData.forEach((data: any) => {
-        if (data.category === "Role") {
-          data.value = "All";
-        }
-      });
-
-      setChipData(chipData);
+      setChipData([...tmpChipData]);
     }
   }, [roleFilterId]);
 
+  //setting chipData if filter by nav name
+  useEffect(() => {
+    let roleChipFindFlag = false;
+    let tmpChipData = [...chipData];
+
+    if (navName) {
+      tmpChipData = tmpChipData.map((singleChipData: any, index: number) => {
+        if (singleChipData.category === "Status") {
+          singleChipData.value = navName;
+          roleChipFindFlag = true;
+        }
+        return singleChipData;
+      });
+
+      if (!roleChipFindFlag) {
+        tmpChipData.push({
+          category: "Status",
+          value: navName,
+        });
+      }
+      setChipData([...tmpChipData]);
+    }
+  }, [navName]);
+
   //setting rows
   useEffect(() => {
-    // debugger
     let rowData: any = [];
     if (sortValue === "First name A-Z") {
       let tempArr = userData.sort((a: any, b: any) =>
@@ -309,45 +299,27 @@ const UsersTable = React.memo(() => {
       });
       userRole = userRole.substr(0, userRole.length - 2);
 
-      if (navName === "all") {
-        rowData.push({
-          id: user.id,
-          avatar: "/broken-image.jpg",
-          fullname: {
-            fullname: user?.firstname + " " + user?.lastname,
-            email: user.email,
-          },
-          status: user.status,
-          role: userRole,
-          firstName: user?.firstname,
-          lastName: user?.lastname,
+      rowData.push({
+        id: user.id,
+        avatar: "/broken-image.jpg",
+        fullname: {
+          fullname: user?.firstname + " " + user?.lastname,
+          email: user.email,
+        },
+        status: user.status,
+        role: userRole,
+        firstName: user?.firstname,
+        lastName: user?.lastname,
 
-          randomColor: randomColor(),
-        });
-      } else {
-        if (navName === user.status) {
-          rowData.push({
-            id: user.id,
-            avatar: "/broken-image.jpg",
-            fullname: {
-              fullname: user?.firstname + " " + user?.lastname,
-              email: user.email,
-            },
-            status: user.status,
-            role: userRole,
-            firstName: user?.firstname,
-            lastName: user?.lastname,
-            randomColor: randomColor(),
-          });
-        }
-      }
+        randomColor: randomColor(),
+      });
     });
 
     setRows(rowData);
     rowLength = rowData.length;
     setListLength(rowLength);
     setRenderFlag(!renderFlag);
-  }, [navName, sortValue, changeDataFlag]);
+  }, [sortValue, changeDataFlag]);
 
   function getStatus(params: GridValueGetterParams) {
     return `${params.row.status || ""} `;
@@ -371,7 +343,7 @@ const UsersTable = React.memo(() => {
       }
     });
     setUserData(userData);
- 
+
     return { ...params.row, value };
   }
 
@@ -486,85 +458,34 @@ const UsersTable = React.memo(() => {
       },
     ];
     setColumns(c);
-  }, [navName, sortValue, rowLength, renderFlag]);
+  }, [sortValue, rowLength, renderFlag]);
 
-  //removing duplicates from user table
-  function removeDuplicates(arr: any) {
- 
-    return arr.filter((item: any, index: any) => {
-      return arr.indexOf(item) === index;
-    });
-  }
-  
-  
   const requestSearch = (e: any) => {
+    let dummyChipData = chipData;
+
     console.log(requestCounter);
     if (e.key === "Enter") {
-   
-      console.log(...userData);
-      let filterData: any;
-      let userID: any;
-      if (requestCounter === 0) {
-        filterData = originalData.filter(
-          (user: any) =>
-            user.firstname ===
-            e.target.value[0].toUpperCase() +
-              e.target.value.slice(1).toLowerCase()
-        );
-        userID = originalData.find((user: any) => {
-          if (
-            user.firstname ===
-            e.target.value[0].toUpperCase() +
-              e.target.value.slice(1).toLowerCase()
-          ) {
-            return user.id;
-          }
-        });
-      } else {
-        filterData = [
-          ...userData,
-          ...originalData.filter(
-            (user: any) =>
-              user.firstname ==
-              e.target.value[0].toUpperCase() +
-                e.target.value.slice(1).toLowerCase()
-          ),
-        ];
-        userID = originalData.find((user: any) => {
-          if (
-            user.firstname ===
-            e.target.value[0].toUpperCase() +
-              e.target.value.slice(1).toLowerCase()
-          ) {
-            return user.id;
-          }
-        });
-      }
-
-      let oldLength = filterData.length;
-      filterData = removeDuplicates(filterData);
-      let newLength = filterData.length;
-      setRequestCounter(1);
-
-      setUserData(filterData);
-      setUserFilterData(filterData);
-      if (filterData.length !== 0 && oldLength === newLength) {
-        let cData = [
-          ...chipData,
-          {
+      if (e.target.value == "") return;
+      if (
+        originalData.find(
+          (user: any) => user.firstname.toLowerCase() === e.target.value
+        )
+      ) {
+        if (
+          dummyChipData.filter(
+            (filterData) =>
+              filterData.value?.toLowerCase() === e.target.value.toLowerCase()
+          )?.length == 0
+        ) {
+          dummyChipData.push({
             category: "Input",
             value: e.target.value,
-            id: userID.id,
-          },
-        ];
-     
-        setChipData(cData);
+          });
+        }
+        setChipData([...dummyChipData]);
+        setUserFilterName("");
       }
-  
-      setUserFilterName("");
-      setChangeDataFlag(!changeDataFlag);
     }
-
   };
 
   //suspending users
@@ -606,7 +527,6 @@ const UsersTable = React.memo(() => {
     });
     setUserData(deleteUser);
     setRows(rowData);
- ;
     rowLength = rowData.length;
   };
 
@@ -722,8 +642,6 @@ const UsersTable = React.memo(() => {
               size="small"
               value={userFilterName}
               onChange={(e: any) => {
-                console.log(e.target.value.length);
-
                 setUserFilterName(e.target.value);
               }}
               onKeyPress={requestSearch}
@@ -741,11 +659,14 @@ const UsersTable = React.memo(() => {
               <StatusDropdown statusFilter={statusFilter} />
             </Grid>
             <Grid item container xl={6} lg={6} md={6} sm={6} xs={12}>
-              <RoleDropdown setRoleFilter={setRoleFilter} roleValue={roleFilterId}/>
+              <RoleDropdown
+                setRoleFilter={setRoleFilter}
+                roleValue={roleFilterId}
+              />
             </Grid>
           </Grid>
         </Grid>
-        <Tags handleDelete={handleDelete} chipData={chipData} />
+        <ChipsArray handleDelete={handleDelete} chipData={chipData} />
         <Grid
           sx={{
             height: 400,
@@ -814,11 +735,10 @@ const UsersTable = React.memo(() => {
             onSelectionModelChange={(rows: any) => {
               setSelectedRows(rows);
               setSelectionModel(rows);
-           
+
               setRenderFlag(!renderFlag);
             }}
             isRowSelectable={(params: GridRowParams) => params.row}
-     
             sx={{
               "& .MuiDataGrid-columnHeaderTitle": {
                 position: "absolute",

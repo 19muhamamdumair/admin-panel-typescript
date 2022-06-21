@@ -4,9 +4,11 @@ import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
 
-interface ChipData {
-  key: number;
-  label: string;
+export interface ChipData {
+  id?: number;
+  label?: string;
+  category?: string;
+  value?: any;
 }
 interface Props{
     chipData:any,
@@ -18,7 +20,7 @@ const ListItem = styled('li')(({ theme }) => ({
 }));
 
 export default function ChipsArray(props:Props) {
- 
+
 
   return (
     <Paper
@@ -28,7 +30,7 @@ export default function ChipsArray(props:Props) {
         flexWrap: 'wrap',
         listStyle: 'none',
         p: 0.5,
-        m: 0,
+     marginBottom:{xl:"0",lg:0,md:"30px",sm:"30px",xs:0},
         boxShadow:'none'
         // backgroundColor:none
       }}
@@ -39,8 +41,8 @@ export default function ChipsArray(props:Props) {
        
 
        
-       return data.value!==null?(
-            <ListItem>
+       return data.value!==null&&data.value!=="All"?(
+            <ListItem >
               <Chip
                 sx={{borderRadius:"0px"}}
                 label={data.value}
