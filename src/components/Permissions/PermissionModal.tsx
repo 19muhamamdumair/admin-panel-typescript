@@ -264,7 +264,7 @@ const PermissionModal = () => {
                 hiddenLabel
                 id="filled-hidden-label-small"
                 size="small"
-                onChange={FilterPermission}
+            
               // InputProps={{
               //   startAdornment: (
               //     <InputAdornment position="start">
@@ -415,24 +415,7 @@ const PermissionModal = () => {
                   </Box>
                 </FormControl>
               </Grid>
-              <Grid item>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    width: { xl: 120, lg: 120, md: 120, sm: 120, xs: 220 },
-                    height: 40,
-                    ml: { xs: 0, lg: 0, xl: 0, sm: 0, md: 0 },
-                    mb: 3,
-                    fontSize: 12,
-                    color: "black",
-                    borderColor: "lightgrey",
-                    textTransform: "none",
-                    fontWeight: "bold",
-                  }}
-                >
-                  More Filters
-                </Button>
-              </Grid>
+              
             </Box>
           </Grid>
 
